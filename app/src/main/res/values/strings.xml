@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Sunshine</string>
+    <string name="type_a_query_for_github">Type a query for GitHub</string>
+    <string name="there_will_be_search_url">There will be search URL</string>
+    <string name="refresh">Refresh</string>
+    <string name="error">Error</string>
+</resources>
