@@ -35,11 +35,9 @@ class WeatherEntry(
         minTemp = minTemp,
         windSpeed = windSpeed,
         pressure = pressure
-    ) {
+    )
 
-    }
-
-    public fun getId(): Int = id
+    fun getId(): Int = id
     public fun setId(id: Int) {
         this.id = id
     }

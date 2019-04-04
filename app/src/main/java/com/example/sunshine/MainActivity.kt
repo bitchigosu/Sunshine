@@ -17,7 +17,6 @@ import com.example.sunshine.database.DateConverter
 import com.example.sunshine.database.WeatherDao
 import com.example.sunshine.database.WeatherEntry
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         mViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(WeatherViewModel::class.java)
         mViewModel.loadWeather(this)
         setProgressBar(true)
-        mViewModel.weatherResult.observe(this, Observer { it ->
+        mViewModel.weatherResult.observe(this, Observer {
             it?.let { it1 ->
                 mAdapter = WeatherAdapter({ position ->
                     onClickFun(position)
@@ -88,9 +87,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             weatherDao = db?.weatherDao()
 
             for (i in 0 until list!!.size) {
-                var entry = takeSmth(i)!!
+                val entry = takeSmth(i)!!
                 Log.d(TAG, "onCreate: $entry")
-                var weather1 = WeatherEntry(
+                val weather1 = WeatherEntry(
                     entry[0],
                     DateConverter().toDate(entry[1].toLong())!!,
                     entry[2],

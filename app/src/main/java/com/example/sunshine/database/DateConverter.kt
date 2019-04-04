@@ -8,6 +8,6 @@ class DateConverter {
         fun toDate(timestamp: Long) = if (timestamp == null) null else Date(timestamp)
 
         @TypeConverter
-        fun toTimestamp(date: Date) = date?.time
+        fun toTimestamp(date: Date) = date.time
 
 }

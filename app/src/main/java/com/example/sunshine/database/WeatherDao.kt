@@ -1,7 +1,6 @@
 package com.example.sunshine.database
 
 import android.arch.persistence.room.*
-import java.util.ArrayList
 
 @Dao
 interface WeatherDao {
