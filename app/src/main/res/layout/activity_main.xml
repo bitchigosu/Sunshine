@@ -11,14 +11,13 @@
         tools:context=".MainActivity">
 
     <EditText
-            android:id="@+id/ed_search"
             android:hint="@string/type_a_query_for_github"
             android:textSize="22sp"
+            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     <TextView
-            android:id="@+id/tv_url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22sp"

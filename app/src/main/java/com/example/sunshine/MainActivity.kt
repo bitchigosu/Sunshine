@@ -1,13 +1,11 @@
 package com.example.sunshine
 
-import android.app.Application
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -31,21 +29,15 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         mViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(WeatherViewModel::class.java)
         mViewModel.loadWeather(this)
         setProgressBar(true)
-        mViewModel.weatherResult.observe(this, Observer {
-            it?.let {
+        mViewModel.weatherResult.observe(this, Observer { it ->
+            it?.let { it1 ->
                 mAdapter = WeatherAdapter({ position ->
                     onClickFun(position)
-                }, it)
+                }, it1)
                 recyclerView.adapter = mAdapter
                 setProgressBar(false)
             }
         })
-
-        Toast.makeText(
-            this,
-            "Value is ${Pref.getBoolean(getString(R.string.pref_show_bass), false)}",
-            Toast.LENGTH_LONG
-        ).show()
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
@@ -60,8 +52,18 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (key.equals(getString(R.string.pref_show_bass))) {
-            Toast.makeText(this, "Value has been changed", Toast.LENGTH_LONG).show()
+        when (key) {
+            getString(R.string.pref_location_key) -> {
+                error_message.text = "Location is ${SunshinePreferences.getPreferredWeatherLocation(this)}"
+            }
+
+            getString(R.string.pref_units_key) -> {
+                Toast.makeText(
+                    this,
+                    "Units is ${SunshinePreferences.getPreferredWeatherUnits(this)}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 

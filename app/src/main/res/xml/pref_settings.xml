@@ -3,7 +3,7 @@
     <EditTextPreference
             android:defaultValue="Mountain View, CA 94043"
             android:inputType="text"
-            android:key="@string/location_key"
+            android:key="@string/pref_location_key"
             android:singleLine="true"
             android:title="@string/location_label"/>
 
@@ -11,7 +11,7 @@
             android:defaultValue="Celsius"
             android:entries="@array/pref_units_labels"
             android:entryValues="@array/pref_units_values"
-            android:key="@string/units_key"
+            android:key="@string/pref_units_key"
             android:title="@string/units_label"/>
 
 </PreferenceScreen>

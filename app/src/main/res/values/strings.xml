@@ -5,11 +5,8 @@
     <string name="refresh">Refresh</string>
     <string name="error">Error</string>
     <string name="settings">Settings</string>
-    <string name="pref_hidden">Hidden</string>
-    <string name="pref_shown">Shown</string>
-    <string name="pref_show_bass">show_bass</string>
-    <string name="location_key">location</string>
+    <string name="pref_location_key">location</string>
     <string name="location_label">Location</string>
     <string name="units_label">Temperature Units</string>
-    <string name="units_key">units</string>
+    <string name="pref_units_key">units</string>
 </resources>

@@ -2,13 +2,10 @@ package com.example.sunshine
 
 import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
-import android.R.id.edit
-import android.content.Context
-
 
 class Pref {
     companion object {
-        private val TAG = "Pref"
+        private const val TAG = "Pref"
         private lateinit var prefs: SharedPreferences
 
         private fun initializePrefs() {
@@ -110,12 +107,11 @@ class Pref {
         }
 
         fun getStringToInt(pref: String, defaultValue: Int): Int {
-            try {
-                return Integer.parseInt(getString(pref, Integer.toString(defaultValue)))
+            return try {
+                Integer.parseInt(getString(pref, Integer.toString(defaultValue)))
             } catch (e: Exception) {
-                return defaultValue
+                defaultValue
             }
-
         }
 
         fun setInt(pref: String, num: Int): Boolean {

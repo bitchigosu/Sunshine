@@ -20,9 +20,11 @@ class WeatherRepository {
             .scheme("https")
             .host(STATIC_WEATHER_URL)
             .addPathSegment(STATIC_WEATHER_PATH)
-            .addQueryParameter("q",DEFAULT_WEATHER_LOCATION)
+            .addQueryParameter("q",Pref.getString(context.getString(R.string.pref_location_key)
+                ,DEFAULT_WEATHER_LOCATION))
             .addQueryParameter("mode", "json")
-            .addQueryParameter("units", "metric")
+            .addQueryParameter("units", Pref.getString(context.getString(R.string.pref_units_key)
+                ,""))
             .addQueryParameter("cnt","14")
             .build()
 
