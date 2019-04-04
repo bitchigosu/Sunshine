@@ -7,18 +7,32 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.example.sunshine.database.AppDatabase
+import com.example.sunshine.database.DateConverter
+import com.example.sunshine.database.WeatherDao
+import com.example.sunshine.database.WeatherEntry
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private val TAG = "MainActivity"
     private val DEFAULT_WEATHER_COORDINATES: DoubleArray = DoubleArray(2)
     private lateinit var mViewModel: WeatherViewModel
     private lateinit var mAdapter: WeatherAdapter
+    private var list: MutableList<String>? = null
+
+    private var db: AppDatabase? = null
+    private var weatherDao: WeatherDao? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +48,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 mAdapter = WeatherAdapter({ position ->
                     onClickFun(position)
                 }, it1)
+                list = it1
                 recyclerView.adapter = mAdapter
                 setProgressBar(false)
             }
@@ -67,6 +82,40 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
+    private fun observe() {
+        Observable.fromCallable {
+            db = AppDatabase.getInstance(this)
+            weatherDao = db?.weatherDao()
+
+            for (i in 0 until list!!.size) {
+                var entry = takeSmth(i)!!
+                Log.d(TAG, "onCreate: $entry")
+                var weather1 = WeatherEntry(
+                    entry[0],
+                    DateConverter().toDate(entry[1].toLong())!!,
+                    entry[2],
+                    entry[3].toDouble(),
+                    entry[4].toDouble(),
+                    entry[5].toDouble(),
+                    entry[6].toDouble()
+                )
+
+                with(weatherDao) {
+                    this?.insert(weather1)
+                }
+            }
+            db?.weatherDao()?.loadAllWeather()
+        }.doOnNext {
+            var finalString = ""
+            it?.map { we ->
+                finalString += we.getDate().toString() + " - " }
+            error_message.text = finalString
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .onErrorResumeNext(Observable.empty())
+            .subscribe()
+    }
+
     private fun onClickFun(position: Int) {
         val intent = Intent(this, DetailActivity::class.java)
         startActivity(intent)
@@ -79,8 +128,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.btn_searchBar -> {
-            mViewModel.updateWeather("Swag")
-            setProgressBar(true)
+            observe()
             true
         }
 
@@ -93,6 +141,11 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         else -> {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun takeSmth(index: Int): List<String>? {
+        val string: String? = list?.get(index)
+        return string?.split(" - ")
     }
 
     private fun setProgressBar(b: Boolean) {

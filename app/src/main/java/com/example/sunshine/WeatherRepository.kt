@@ -7,9 +7,8 @@ import java.io.IOException
 
 class WeatherRepository {
     private val TAG = "WeatherRepository"
-    private val DEFAULT_WEATHER_LOCATION = "94043,USA"
-    private val STATIC_WEATHER_URL = "andfun-weather.udacity.com"
-    private val STATIC_WEATHER_PATH = "staticweather"
+    private val DEFAULT_WEATHER_LOCATION = "Moscow"
+    private val STATIC_WEATHER_URL = "samples.openweathermap.org"
 
     private lateinit var weather: MutableList<String>
 
@@ -19,13 +18,12 @@ class WeatherRepository {
         val httpUrl = HttpUrl.Builder()
             .scheme("https")
             .host(STATIC_WEATHER_URL)
-            .addPathSegment(STATIC_WEATHER_PATH)
-            .addQueryParameter("q",Pref.getString(context.getString(R.string.pref_location_key)
-                ,DEFAULT_WEATHER_LOCATION))
-            .addQueryParameter("mode", "json")
-            .addQueryParameter("units", Pref.getString(context.getString(R.string.pref_units_key)
-                ,""))
-            .addQueryParameter("cnt","14")
+            .addPathSegment("data")
+            .addPathSegment("2.5")
+            .addPathSegment("forecast")
+            .addPathSegment("daily")
+            .addQueryParameter("id","524901")
+            .addQueryParameter("appid","b1b15e88fa797225412429c1c50c122a1")
             .build()
 
         val request = Request.Builder()
@@ -36,7 +34,7 @@ class WeatherRepository {
             override fun onResponse(call: Call, response: Response) {
                 val jsonString = response.body()!!.string()
                 Log.d(TAG, "onResponse: $jsonString")
-                weather = JsonUtil().getSimpleWeatherStringsFromJson(context, jsonString)
+                weather = JsonUtil.getSimpleWeatherStringsFromJson(context, jsonString)
                 completion(weather)
             }
 

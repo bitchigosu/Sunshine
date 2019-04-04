@@ -6,7 +6,7 @@
     </array>
 
     <array name="pref_units_values">
-        <item>Celsius</item>
-        <item>Fahrenheit</item>
+        <item>metric</item>
+        <item>imperial</item>
     </array>
 </resources>

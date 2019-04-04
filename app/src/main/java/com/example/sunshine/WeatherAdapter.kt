@@ -1,5 +1,7 @@
 package com.example.sunshine
 
+import android.content.Context
+import android.database.Cursor
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import kotlinx.android.synthetic.main.list_item.view.*
 
 class WeatherAdapter(private val listener: (Int) -> Unit, private val weatherData: MutableList<String>) :
     RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): WeatherViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
