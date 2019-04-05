@@ -1,4 +1,4 @@
-package com.example.sunshine
+package com.example.sunshine.utils
 
 import android.content.Context
 import org.json.JSONObject
@@ -7,6 +7,7 @@ import java.net.HttpURLConnection
 import java.util.*
 import android.text.format.DateUtils
 import java.text.SimpleDateFormat
+import kotlin.collections.ArrayList
 
 
 class JsonUtil {
@@ -19,7 +20,7 @@ class JsonUtil {
         const val DAY_IN_MILLIS = HOUR_IN_MILLIS * 24
 
         @Throws(JSONException::class)
-        fun getSimpleWeatherStringsFromJson(context: Context, forecastJsonStr: String): MutableList<String> {
+        fun getSimpleWeatherStringsFromJson(context: Context, forecastJsonStr: String): ArrayList<String> {
 
             /* Weather information. Each day's forecast info is an element of the "list" array */
             val OWM_LIST = "list"
@@ -43,7 +44,7 @@ class JsonUtil {
             val OWM_CITY_NAME = "name"
 
             /* String array to hold each day's weather String */
-            val parsedWeatherData = mutableListOf<String>()
+            val parsedWeatherData = ArrayList<String>()
 
             val forecastJson = JSONObject(forecastJsonStr)
 
@@ -56,10 +57,10 @@ class JsonUtil {
                     }
                     HttpURLConnection.HTTP_NOT_FOUND ->
                         /* Location invalid */
-                        return mutableListOf()
+                        return ArrayList()
                     else ->
                         /* Server probably down */
-                        return mutableListOf()
+                        return ArrayList()
                 }
             }
             val cityArray = forecastJson.getJSONObject(OWM_CITY)
@@ -94,7 +95,8 @@ class JsonUtil {
                  * We ignore all the datetime values embedded in the JSON and assume that
                  * the values are returned in-order by day (which is not guaranteed to be correct).
                  */
-                date = getFriendlyDateString(context, dateTimeMillis, false)
+                date =
+                    getFriendlyDateString(context, dateTimeMillis, false)
 
                 /*
                  * Description is in a child array called "weather", which is 1 element long.
@@ -135,7 +137,8 @@ class JsonUtil {
 
             val localDate = getLocalDateFromUTC(dateInMillis)
             val dayNumber = getDayNumber(localDate)
-            val currentDayNumber = getDayNumber(System.currentTimeMillis())
+            val currentDayNumber =
+                getDayNumber(System.currentTimeMillis())
 
             if (dayNumber == currentDayNumber || showFullDate) {
                 /*
@@ -143,7 +146,8 @@ class JsonUtil {
                  * is "Today, June 24"
                  */
                 val dayName = getDayName(localDate)
-                val readableDate = getReadableDateString(context, localDate)
+                val readableDate =
+                    getReadableDateString(context, localDate)
                 if (dayNumber - currentDayNumber < 2) {
                     /*
                      * Since there is no localized format that returns "Today" or "Tomorrow" in the API
@@ -179,7 +183,8 @@ class JsonUtil {
              * day name.
              */
             val dayNumber = getDayNumber(dateInMillis)
-            val currentDayNumber = getDayNumber(System.currentTimeMillis())
+            val currentDayNumber =
+                getDayNumber(System.currentTimeMillis())
             return when (dayNumber) {
                 currentDayNumber -> "Today"
                 currentDayNumber + 1 -> "Tomorrow"

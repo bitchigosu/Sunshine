@@ -3,11 +3,13 @@ package com.example.sunshine.database
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import io.reactivex.annotations.NonNull
 import java.util.*
 
 @Entity(tableName = "weathers")
 class WeatherEntry(
-    @PrimaryKey(autoGenerate = true) private var id: Int,
+    @PrimaryKey(autoGenerate = true)
+    private var id: Int,
     private var city: String,
     private var date: Date,
     private var weatherDesc: String,
@@ -37,7 +39,7 @@ class WeatherEntry(
         pressure = pressure
     )
 
-    fun getId(): Int = id
+    fun getId(): Int? = id
     public fun setId(id: Int) {
         this.id = id
     }

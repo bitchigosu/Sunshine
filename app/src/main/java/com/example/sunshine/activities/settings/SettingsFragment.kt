@@ -1,4 +1,4 @@
-package com.example.sunshine
+package com.example.sunshine.activities.settings
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
+import com.example.sunshine.R
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreatePreferences(p0: Bundle?, p1: String?) {

@@ -13,7 +13,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name=".activities.forecast.MainActivity"
                   android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,16 +21,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SettingsActivity"
+        <activity android:name=".activities.settings.SettingsActivity"
                   android:label="@string/settings">
         </activity>
 
-        <activity android:name=".DetailActivity"
+        <activity android:name=".activities.detail.DetailActivity"
                   android:label="Detailed Info"
-                  android:parentActivityName=".MainActivity">
+                  android:parentActivityName=".activities.forecast.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity"/>
+                    android:value=".activities.forecast.MainActivity"/>
         </activity>
 
 

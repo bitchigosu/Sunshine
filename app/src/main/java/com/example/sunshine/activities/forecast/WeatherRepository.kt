@@ -1,7 +1,8 @@
-package com.example.sunshine
+package com.example.sunshine.activities.forecast
 
 import android.content.Context
 import android.util.Log
+import com.example.sunshine.utils.JsonUtil
 import okhttp3.*
 import java.io.IOException
 
@@ -10,9 +11,9 @@ class WeatherRepository {
     private val DEFAULT_WEATHER_LOCATION = "Moscow"
     private val STATIC_WEATHER_URL = "samples.openweathermap.org"
 
-    private lateinit var weather: MutableList<String>
+    private lateinit var weather: ArrayList<String>
 
-    fun getWeatherData(context:Context, completion: (MutableList<String>) -> Unit) {
+    fun getWeatherData(context:Context, completion: (ArrayList<String>) -> Unit) {
         val client = OkHttpClient()
 
         val httpUrl = HttpUrl.Builder()
@@ -39,12 +40,12 @@ class WeatherRepository {
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                completion(mutableListOf())
+                completion(ArrayList())
             }
         })
     }
 
-    fun addWeatherData(data: String, completion: (MutableList<String>) -> Unit) {
+    fun addWeatherData(data: String, completion: (ArrayList<String>) -> Unit) {
         weather.add(data)
         completion(weather)
     }

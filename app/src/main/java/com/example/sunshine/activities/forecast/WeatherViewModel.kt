@@ -1,11 +1,12 @@
-package com.example.sunshine
+package com.example.sunshine.activities.forecast
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
+import com.example.sunshine.database.WeatherEntry
 
 class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() {
-    val weatherResult = MutableLiveData<MutableList<String>>()
+    val weatherResult = MutableLiveData<ArrayList<String>>()
 
     fun loadWeather(context: Context) {
         repository.getWeatherData(context) { weather ->

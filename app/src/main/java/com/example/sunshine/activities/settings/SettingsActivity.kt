@@ -1,8 +1,9 @@
-package com.example.sunshine
+package com.example.sunshine.activities.settings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import com.example.sunshine.R
 
 class SettingsActivity : AppCompatActivity() {
 

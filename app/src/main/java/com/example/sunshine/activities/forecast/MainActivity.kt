@@ -1,4 +1,4 @@
-package com.example.sunshine
+package com.example.sunshine.activities.forecast
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -12,10 +12,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.example.sunshine.R
+import com.example.sunshine.activities.ViewModelFactory
+import com.example.sunshine.activities.detail.DetailActivity
+import com.example.sunshine.activities.settings.SettingsActivity
 import com.example.sunshine.database.AppDatabase
 import com.example.sunshine.database.DateConverter
 import com.example.sunshine.database.WeatherDao
 import com.example.sunshine.database.WeatherEntry
+import com.example.sunshine.utils.Pref
+import com.example.sunshine.utils.SunshinePreferences
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -28,7 +34,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private val DEFAULT_WEATHER_COORDINATES: DoubleArray = DoubleArray(2)
     private lateinit var mViewModel: WeatherViewModel
     private lateinit var mAdapter: WeatherAdapter
-    private var list: MutableList<String>? = null
+    private var list = ArrayList<String>()
 
     private var db: AppDatabase? = null
     private var weatherDao: WeatherDao? = null
@@ -39,16 +45,21 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         Pref.registerListener(this)
 
-        mViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(WeatherViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this,
+            ViewModelFactory()).get(WeatherViewModel::class.java)
         mViewModel.loadWeather(this)
+
+        mAdapter = WeatherAdapter({position ->
+            onClickFun(position)},
+            list)
+        recyclerView.adapter = mAdapter
+
         setProgressBar(true)
+
         mViewModel.weatherResult.observe(this, Observer {
             it?.let { it1 ->
-                mAdapter = WeatherAdapter({ position ->
-                    onClickFun(position)
-                }, it1)
                 list = it1
-                recyclerView.adapter = mAdapter
+                observe()
                 setProgressBar(false)
             }
         })
@@ -82,32 +93,36 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun observe() {
-        Observable.fromCallable {
+        Observable.fromCallable{
             db = AppDatabase.getInstance(this)
             weatherDao = db?.weatherDao()
+            weatherDao?.delete()
 
-            for (i in 0 until list!!.size) {
+            for (i in 0 until list.size) {
                 val entry = takeSmth(i)!!
                 Log.d(TAG, "onCreate: $entry")
-                val weather1 = WeatherEntry(
-                    entry[0],
-                    DateConverter().toDate(entry[1].toLong())!!,
-                    entry[2],
-                    entry[3].toDouble(),
-                    entry[4].toDouble(),
-                    entry[5].toDouble(),
-                    entry[6].toDouble()
+                val weather1 = WeatherEntry(id = i,
+                    city = entry[0],
+                    date = DateConverter().toDate(entry[1].toLong())!!,
+                    weatherDesc = entry[2],
+                    maxTemp = entry[3].toDouble(),
+                    minTemp = entry[4].toDouble(),
+                    windSpeed = entry[5].toDouble(),
+                    pressure = entry[6].toDouble()
                 )
 
                 with(weatherDao) {
                     this?.insert(weather1)
+                    Log.d(TAG, "observe: ${this?.getRowCount()}")
                 }
             }
+            Log.d(TAG, "observe: ${db?.weatherDao()?.getRowCount()}")
             db?.weatherDao()?.loadAllWeather()
         }.doOnNext {
+            mAdapter.updateData(it!!)
             var finalString = ""
             it?.map { we ->
-                finalString += we.getDate().toString() + " - " }
+                finalString += " - " }
             error_message.text = finalString
         }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -143,7 +158,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun takeSmth(index: Int): List<String>? {
-        val string: String? = list?.get(index)
+        val string: String? = list[index]
         return string?.split(" - ")
     }
 
