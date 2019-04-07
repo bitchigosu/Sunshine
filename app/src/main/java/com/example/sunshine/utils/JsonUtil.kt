@@ -46,7 +46,6 @@ class JsonUtil {
             val OWM_CITY_NAME = "name"
 
             /* String array to hold each day's weather String */
-            val parsedWeatherData = ArrayList<String>()
             val weatherData = ArrayList<WeatherEntry>()
 
             val forecastJson = JSONObject(forecastJsonStr)

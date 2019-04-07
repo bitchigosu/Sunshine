@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,17 +15,12 @@ import com.example.sunshine.R
 import com.example.sunshine.activities.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.activities.settings.SettingsActivity
-import com.example.sunshine.database.AppDatabase
-import com.example.sunshine.database.DateConverter
-import com.example.sunshine.database.WeatherDao
-import com.example.sunshine.database.WeatherEntry
+
 import com.example.sunshine.utils.Pref
 import com.example.sunshine.utils.SunshinePreferences
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -34,8 +28,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private val DEFAULT_WEATHER_COORDINATES: DoubleArray = DoubleArray(2)
     private lateinit var mViewModel: WeatherViewModel
     private lateinit var mAdapter: WeatherAdapter
-    private var list = ArrayList<String>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +63,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
             getString(R.string.pref_location_key) -> {
-                error_message.text = "Location is ${SunshinePreferences.getPreferredWeatherLocation(this)}"
             }
 
             getString(R.string.pref_units_key) -> {

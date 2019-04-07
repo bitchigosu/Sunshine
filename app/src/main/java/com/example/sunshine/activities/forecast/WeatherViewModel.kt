@@ -14,16 +14,4 @@ class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() 
     fun clear() {
         repository.clear()
     }
-
-/*    fun loadWeather(context: Context) {
-        repository.getWeatherData(context) { weather ->
-            weatherResult.postValue(weather)
-        }
-    }*/
-
-/*    fun updateWeather(data: String){
-        repository.addWeatherData(data) { weather ->
-            weatherResult.postValue(weather)
-        }
-    }*/
 }

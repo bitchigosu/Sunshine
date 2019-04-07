@@ -10,30 +10,9 @@
         android:layout_height="match_parent"
         tools:context=".activities.forecast.MainActivity">
 
-    <EditText
-            android:hint="@string/type_a_query_for_github"
-            android:textSize="22sp"
-            android:inputType="text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:layout_marginTop="8dp"
-            android:text="@string/there_will_be_search_url"/>
-
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <TextView
-                android:id="@+id/error_message"
-                android:text="@string/error"
-                android:textSize="18sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
         <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="42dp"
