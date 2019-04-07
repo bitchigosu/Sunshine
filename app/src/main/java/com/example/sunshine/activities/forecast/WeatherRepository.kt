@@ -1,19 +1,37 @@
 package com.example.sunshine.activities.forecast
 
-import android.content.Context
+import android.arch.lifecycle.LiveData
+import android.os.AsyncTask
 import android.util.Log
+import android.widget.Toast
+import com.example.sunshine.SuperApplication
+import com.example.sunshine.database.AppDatabase
+import com.example.sunshine.database.WeatherDao
+import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.JsonUtil
 import okhttp3.*
 import java.io.IOException
-
 class WeatherRepository {
     private val TAG = "WeatherRepository"
     private val DEFAULT_WEATHER_LOCATION = "Moscow"
     private val STATIC_WEATHER_URL = "samples.openweathermap.org"
 
-    private lateinit var weather: ArrayList<String>
+    private lateinit var weather: ArrayList<WeatherEntry>
+    private var mAllWeather: LiveData<List<WeatherEntry>>
+    private var mWeatherDao: WeatherDao
 
-    fun getWeatherData(context:Context, completion: (ArrayList<String>) -> Unit) {
+    init {
+        val db = AppDatabase.getInstance(SuperApplication.getContext())
+        mWeatherDao = db!!.weatherDao()
+        mAllWeather = mWeatherDao.getAllWeather()
+    }
+
+    fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask(mWeatherDao).execute()
+
+    fun insert(weather: WeatherEntry) = InsertAsyncTask(mWeatherDao).execute(weather)!!
+
+    fun getWeatherData(): LiveData<List<WeatherEntry>> {
+        Toast.makeText(SuperApplication.getContext(),"Starting getWeather",Toast.LENGTH_SHORT).show()
         val client = OkHttpClient()
 
         val httpUrl = HttpUrl.Builder()
@@ -23,8 +41,8 @@ class WeatherRepository {
             .addPathSegment("2.5")
             .addPathSegment("forecast")
             .addPathSegment("daily")
-            .addQueryParameter("id","524901")
-            .addQueryParameter("appid","b1b15e88fa797225412429c1c50c122a1")
+            .addQueryParameter("id", "524901")
+            .addQueryParameter("appid", "b1b15e88fa797225412429c1c50c122a1")
             .build()
 
         val request = Request.Builder()
@@ -35,18 +53,39 @@ class WeatherRepository {
             override fun onResponse(call: Call, response: Response) {
                 val jsonString = response.body()!!.string()
                 Log.d(TAG, "onResponse: $jsonString")
-                weather = JsonUtil.getSimpleWeatherStringsFromJson(context, jsonString)
-                completion(weather)
+                weather = JsonUtil.getSimpleWeatherStringsFromJson(SuperApplication.getContext()
+                    ,jsonString)
+                for (i in 0 until weather.size) {
+                    insert(weather[i])
+                }
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                completion(ArrayList())
             }
         })
+
+        mAllWeather = mWeatherDao.getAllWeather()
+        return mAllWeather
     }
 
-    fun addWeatherData(data: String, completion: (ArrayList<String>) -> Unit) {
-        weather.add(data)
-        completion(weather)
+    companion object {
+        private class InsertAsyncTask(private val mAsyncTaskDao: WeatherDao) : AsyncTask<WeatherEntry, Unit, Unit>() {
+            override fun doInBackground(vararg params: WeatherEntry?): Unit? {
+                mAsyncTaskDao.insert(params[0]!!)
+                return null
+            }
+        }
+
+        private class DeleteAsyncTask(private val mAsyncTaskDao: WeatherDao) : AsyncTask<WeatherEntry, Unit, Unit>() {
+            override fun doInBackground(vararg params: WeatherEntry?): Unit? {
+                mAsyncTaskDao.deleteAll()
+                return null
+            }
+
+            override fun onPostExecute(result: Unit?) {
+                WeatherRepository().getWeatherData()
+            }
+        }
     }
 }
+

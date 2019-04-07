@@ -6,6 +6,8 @@ import org.json.JSONException
 import java.net.HttpURLConnection
 import java.util.*
 import android.text.format.DateUtils
+import com.example.sunshine.database.DateConverter
+import com.example.sunshine.database.WeatherEntry
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
 
@@ -20,7 +22,7 @@ class JsonUtil {
         const val DAY_IN_MILLIS = HOUR_IN_MILLIS * 24
 
         @Throws(JSONException::class)
-        fun getSimpleWeatherStringsFromJson(context: Context, forecastJsonStr: String): ArrayList<String> {
+        fun getSimpleWeatherStringsFromJson(context: Context, forecastJsonStr: String): ArrayList<WeatherEntry> {
 
             /* Weather information. Each day's forecast info is an element of the "list" array */
             val OWM_LIST = "list"
@@ -45,6 +47,7 @@ class JsonUtil {
 
             /* String array to hold each day's weather String */
             val parsedWeatherData = ArrayList<String>()
+            val weatherData = ArrayList<WeatherEntry>()
 
             val forecastJson = JSONObject(forecastJsonStr)
 
@@ -115,11 +118,12 @@ class JsonUtil {
                 val temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE)
                 high = temperatureObject.getDouble(OWM_MAX)
                 low = temperatureObject.getDouble(OWM_MIN)
+                weatherData.add(WeatherEntry(id = i,city = cityName, date = DateConverter().toDate(timeInMillis)!!,
+                    weatherDesc = description, maxTemp = high, minTemp = low, windSpeed = speed, pressure = pressure))
 
-                parsedWeatherData.add(i, "$cityName - $timeInMillis - $description - $high - $low - $speed - $pressure")
             }
 
-            return parsedWeatherData
+            return weatherData
         }
 
         private fun getUTCDateFromLocal(localDate: Long): Long {

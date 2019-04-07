@@ -9,21 +9,17 @@ import android.arch.lifecycle.LiveData
 interface WeatherDao {
 
     @Query("SELECT * FROM weathers")
-    fun loadAllWeather(): List<WeatherEntry>
+    fun getAllWeather():  LiveData<List<WeatherEntry>>
 
     @Query("SELECT COUNT(*) FROM weathers")
     fun getRowCount(): Int
 
     @Query("DELETE FROM weathers")
-    fun delete()
+    fun deleteAll()
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateWeather(weatherEntry: WeatherEntry)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(weatherEntry: WeatherEntry)
-
-    @Delete
-    fun deleteWeather(weatherEntry: WeatherEntry)
-
 }

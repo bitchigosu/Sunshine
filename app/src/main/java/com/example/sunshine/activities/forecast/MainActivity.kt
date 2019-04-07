@@ -36,8 +36,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private lateinit var mAdapter: WeatherAdapter
     private var list = ArrayList<String>()
 
-    private var db: AppDatabase? = null
-    private var weatherDao: WeatherDao? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,27 +43,21 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         Pref.registerListener(this)
 
-        mViewModel = ViewModelProviders.of(this,
-            ViewModelFactory()).get(WeatherViewModel::class.java)
-        mViewModel.loadWeather(this)
-
-        mAdapter = WeatherAdapter({position ->
-            onClickFun(position)},
-            list)
+        mAdapter = WeatherAdapter { position ->
+            onClickFun(position)}
         recyclerView.adapter = mAdapter
-
-        setProgressBar(true)
-
-        mViewModel.weatherResult.observe(this, Observer {
-            it?.let { it1 ->
-                list = it1
-                observe()
-                setProgressBar(false)
-            }
-        })
-
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
+
+        setProgressBar(true)
+        mViewModel = ViewModelProviders.of(this,
+            ViewModelFactory()).get(WeatherViewModel::class.java)
+        mViewModel.getCachedWeather().observe(this, Observer {
+            mAdapter.updateData(it!!)
+            setProgressBar(false)
+        })
+
+
         DEFAULT_WEATHER_COORDINATES[0] = 37.4284
         DEFAULT_WEATHER_COORDINATES[1] = 122.0724
 
@@ -92,44 +84,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    private fun observe() {
-        Observable.fromCallable{
-            db = AppDatabase.getInstance(this)
-            weatherDao = db?.weatherDao()
-            weatherDao?.delete()
-
-            for (i in 0 until list.size) {
-                val entry = takeSmth(i)!!
-                Log.d(TAG, "onCreate: $entry")
-                val weather1 = WeatherEntry(id = i,
-                    city = entry[0],
-                    date = DateConverter().toDate(entry[1].toLong())!!,
-                    weatherDesc = entry[2],
-                    maxTemp = entry[3].toDouble(),
-                    minTemp = entry[4].toDouble(),
-                    windSpeed = entry[5].toDouble(),
-                    pressure = entry[6].toDouble()
-                )
-
-                with(weatherDao) {
-                    this?.insert(weather1)
-                    Log.d(TAG, "observe: ${this?.getRowCount()}")
-                }
-            }
-            Log.d(TAG, "observe: ${db?.weatherDao()?.getRowCount()}")
-            db?.weatherDao()?.loadAllWeather()
-        }.doOnNext {
-            mAdapter.updateData(it!!)
-            var finalString = ""
-            it?.map { we ->
-                finalString += " - " }
-            error_message.text = finalString
-        }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .onErrorResumeNext(Observable.empty())
-            .subscribe()
-    }
-
     private fun onClickFun(position: Int) {
         val intent = Intent(this, DetailActivity::class.java)
         startActivity(intent)
@@ -142,7 +96,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.btn_searchBar -> {
-            observe()
+            mViewModel.clear()
             true
         }
 
@@ -155,11 +109,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         else -> {
             super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun takeSmth(index: Int): List<String>? {
-        val string: String? = list[index]
-        return string?.split(" - ")
     }
 
     private fun setProgressBar(b: Boolean) {
