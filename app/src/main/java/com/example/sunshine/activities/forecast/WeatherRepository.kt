@@ -79,7 +79,7 @@ class WeatherRepository {
             override fun onFailure(call: Call, e: IOException) {
             }
         })
-
+        notifications()
         mAllWeather = mWeatherDao.getAllWeather()
         return mAllWeather
     }
