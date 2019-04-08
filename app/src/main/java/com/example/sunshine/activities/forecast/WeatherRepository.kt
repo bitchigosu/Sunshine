@@ -1,16 +1,26 @@
 package com.example.sunshine.activities.forecast
 
+import android.app.PendingIntent
 import android.arch.lifecycle.LiveData
+import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.app.TaskStackBuilder
+import android.text.format.DateUtils
 import android.util.Log
 import android.widget.Toast
+import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
+import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.database.AppDatabase
 import com.example.sunshine.database.WeatherDao
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.mAllWeather
 import com.example.sunshine.mWeatherDao
 import com.example.sunshine.utils.JsonUtil
+import com.example.sunshine.utils.SunshinePreferences
 import okhttp3.*
 import java.io.IOException
 
@@ -72,6 +82,34 @@ class WeatherRepository {
 
         mAllWeather = mWeatherDao.getAllWeather()
         return mAllWeather
+    }
+
+    fun notifications() {
+        val context = SuperApplication.getContext()
+        val notificationsEnabled = SunshinePreferences.areNotificationsEnabled(context)
+        val timeSinceLastNotification = SunshinePreferences.getEllapsedTimeSinceLastNotification(context)
+        var oneDayPassedSinceLastNotification = false
+        if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
+            oneDayPassedSinceLastNotification = true
+        }
+
+        if (notificationsEnabled and oneDayPassedSinceLastNotification) {
+            val notificationBuilder = NotificationCompat.Builder(context, "1")
+                .setSmallIcon(R.drawable.notify_panel_notification_icon_bg)
+                .setContentTitle("Sunshine")
+                .setContentText("New weather available")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+            val detailIntentForToday = Intent(context, DetailActivity::class.java)
+            val taskStackBuilder = TaskStackBuilder.create(context)
+            taskStackBuilder.addNextIntentWithParentStack(detailIntentForToday)
+            val resultIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+            notificationBuilder.setContentIntent(resultIntent)
+            with(NotificationManagerCompat.from(context)) {
+                notify(3004, notificationBuilder.build())
+            }
+            SunshinePreferences.saveLastNotificationTime(context, System.currentTimeMillis())
+        }
     }
 
     companion object {

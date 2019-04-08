@@ -2,6 +2,7 @@ package com.example.sunshine
 
 import android.os.AsyncTask
 import com.example.sunshine.activities.forecast.SunshineSyncTask
+import com.example.sunshine.activities.forecast.WeatherRepository
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 
@@ -23,7 +24,7 @@ open class SunshineFirebaseJobService : JobService() {
 
     class FetchWeatherTask: AsyncTask<Void,Void,Void>() {
         override fun doInBackground(vararg params: Void?): Void? {
-            SunshineSyncTask.syncWeather()
+            WeatherRepository().getWeatherData()
             return null
         }
     }
