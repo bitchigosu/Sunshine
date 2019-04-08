@@ -18,6 +18,7 @@ import com.example.sunshine.activities.settings.SettingsActivity
 
 import com.example.sunshine.utils.Pref
 import com.example.sunshine.utils.SunshinePreferences
+import com.example.sunshine.utils.SunshineSyncUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         setContentView(R.layout.activity_main)
 
         Pref.registerListener(this)
+
+        SunshineSyncUtils.initialize(this)
 
         mAdapter = WeatherAdapter { position ->
             onClickFun(position)}

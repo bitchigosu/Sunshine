@@ -33,6 +33,15 @@
                     android:value=".activities.forecast.MainActivity"/>
         </activity>
 
+        <service android:name=".activities.forecast.SunshineSyncIntentService"
+                 android:exported="false"/>
+        <service android:name=".SunshineFirebaseJobService"
+                 android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
 
     </application>
 

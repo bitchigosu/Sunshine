@@ -1,5 +1,6 @@
 package com.example.sunshine.activities.settings
 
+import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.preference.EditTextPreference
@@ -7,6 +8,7 @@ import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import com.example.sunshine.R
+import com.example.sunshine.utils.SunshineSyncUtils
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreatePreferences(p0: Bundle?, p1: String?) {
@@ -18,15 +20,19 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         for (i in 0 until count) {
             val p: Preference = prefScreen.getPreference(i)
             val value = sharedPreferences.getString(p.key, "")
-            setPreferenceSummary(p, value)
+            setPreferenceSummary(p, value!!)
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        val activity: Activity = this.activity!!
+        if (key.equals(getString(R.string.pref_location_key))) {
+            SunshineSyncUtils.startImmediateSync(activity)
+        }
         val preference = findPreference(key)
         if (preference != null) {
             val value = sharedPreferences!!.getString(preference.key, "")
-            setPreferenceSummary(preference, value)
+            setPreferenceSummary(preference, value!!)
         }
     }
 
