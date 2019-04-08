@@ -31,7 +31,7 @@ class WeatherRepository {
     fun insert(weather: WeatherEntry) = InsertAsyncTask(mWeatherDao).execute(weather)!!
 
     fun getWeatherData(): LiveData<List<WeatherEntry>> {
-        Toast.makeText(SuperApplication.getContext(),"Starting getWeather",Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "getWeatherData: inside getWeatherData ")
         val client = OkHttpClient()
 
         val httpUrl = HttpUrl.Builder()
@@ -77,6 +77,7 @@ class WeatherRepository {
         }
 
         private class DeleteAsyncTask(private val mAsyncTaskDao: WeatherDao) : AsyncTask<WeatherEntry, Unit, Unit>() {
+            private val TAG = "DeleteAsyncTask"
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {
                 mAsyncTaskDao.deleteAll()
                 return null

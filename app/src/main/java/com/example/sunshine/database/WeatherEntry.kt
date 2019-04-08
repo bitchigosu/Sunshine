@@ -8,10 +8,10 @@ import java.util.*
 
 @Entity(tableName = "weathers")
 class WeatherEntry(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private var id: Int,
     private var city: String,
-    private var date: Date,
+    private var date: String,
     private var weatherDesc: String,
     private var maxTemp: Double,
     private var minTemp: Double,
@@ -19,10 +19,10 @@ class WeatherEntry(
     private var pressure: Double
 ) {
 
-    @Ignore
+/*    @Ignore
     constructor(
         city: String,
-        date: Date,
+        date: String,
         weatherDesc: String,
         maxTemp: Double,
         minTemp: Double,
@@ -37,7 +37,7 @@ class WeatherEntry(
         minTemp = minTemp,
         windSpeed = windSpeed,
         pressure = pressure
-    )
+    )*/
 
     fun getId(): Int? = id
     public fun setId(id: Int) {
@@ -74,8 +74,8 @@ class WeatherEntry(
         this.minTemp = minTemp
     }
 
-    public fun getDate(): Date = date
-    public fun setDate(date: Date) {
+    public fun getDate(): String = date
+    public fun setDate(date: String) {
         this.date = date
     }
 

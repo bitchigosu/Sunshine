@@ -75,9 +75,6 @@ class JsonUtil {
             val startDay = normalizeDate(utcDate)
 
             for (i in 0 until weatherArray.length()) {
-                val date: String
-                val highAndLow: String
-
                 /* These are the values that will be collected */
                 val dateTimeMillis: Long = startDay + DAY_IN_MILLIS * i
                 val high: Double
@@ -92,13 +89,7 @@ class JsonUtil {
                 pressure = dayForecast.getDouble(OMW_PRESSURE)
                 speed = dayForecast.getDouble(OWM_SPEED)
                 timeInMillis = dayForecast.getLong("dt")
-
-                /*
-                 * We ignore all the datetime values embedded in the JSON and assume that
-                 * the values are returned in-order by day (which is not guaranteed to be correct).
-                 */
-                date =
-                    getFriendlyDateString(context, dateTimeMillis, false)
+                val date = SimpleDateFormat("EEE, MMM d, ''yy", Locale.UK).format(timeInMillis)
 
                 /*
                  * Description is in a child array called "weather", which is 1 element long.
@@ -117,7 +108,7 @@ class JsonUtil {
                 val temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE)
                 high = temperatureObject.getDouble(OWM_MAX)
                 low = temperatureObject.getDouble(OWM_MIN)
-                weatherData.add(WeatherEntry(id = i,city = cityName, date = DateConverter().toDate(timeInMillis)!!,
+                weatherData.add(WeatherEntry(id = i,city = cityName, date = date,
                     weatherDesc = description, maxTemp = high, minTemp = low, windSpeed = speed, pressure = pressure))
 
             }

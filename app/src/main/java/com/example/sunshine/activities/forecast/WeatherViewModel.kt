@@ -1,9 +1,7 @@
 package com.example.sunshine.activities.forecast
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.content.Context
 import com.example.sunshine.database.WeatherEntry
 
 class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() {

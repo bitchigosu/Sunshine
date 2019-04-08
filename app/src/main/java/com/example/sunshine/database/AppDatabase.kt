@@ -6,8 +6,7 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
 
-@Database(entities = [WeatherEntry::class], version = 1, exportSchema = false)
-@TypeConverters(DateConverter::class)
+@Database(entities = [WeatherEntry::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
         private const val TAG = "AppDatabase"
@@ -23,6 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         AppDatabase.DATABASE_NAME
                     )
+                        .fallbackToDestructiveMigration()
                         .build()
                 }
             }
