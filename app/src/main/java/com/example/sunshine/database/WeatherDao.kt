@@ -14,6 +14,9 @@ interface WeatherDao {
     @Query("SELECT COUNT(*) FROM weathers")
     fun getRowCount(): Int
 
+    @Query("SELECT * FROM weathers WHERE id=:id")
+    fun getWeatherById(id: Int): WeatherEntry
+
     @Query("DELETE FROM weathers")
     fun deleteAll()
 

@@ -2,7 +2,6 @@ package com.example.sunshine.activities.forecast
 
 import android.app.PendingIntent
 import android.arch.lifecycle.LiveData
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.support.v4.app.NotificationCompat
@@ -10,11 +9,9 @@ import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.TaskStackBuilder
 import android.text.format.DateUtils
 import android.util.Log
-import android.widget.Toast
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.detail.DetailActivity
-import com.example.sunshine.database.AppDatabase
 import com.example.sunshine.database.WeatherDao
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.mAllWeather
@@ -25,19 +22,8 @@ import okhttp3.*
 import java.io.IOException
 
 class WeatherRepository {
-    private val TAG = "WeatherRepository"
-    private val DEFAULT_WEATHER_LOCATION = "Moscow"
-    private val STATIC_WEATHER_URL = "samples.openweathermap.org"
 
     private lateinit var weather: ArrayList<WeatherEntry>
-/*    private var mAllWeather: LiveData<List<WeatherEntry>>
-    private var mWeatherDao: WeatherDao
-
-    init {
-        val db = AppDatabase.getInstance(SuperApplication.getContext())
-        mWeatherDao = db!!.weatherDao()
-        mAllWeather = mWeatherDao.getAllWeather()
-    }*/
 
     fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask(mWeatherDao).execute()
 
@@ -84,7 +70,7 @@ class WeatherRepository {
         return mAllWeather
     }
 
-    fun notifications() {
+    private fun notifications() {
         val context = SuperApplication.getContext()
         val notificationsEnabled = SunshinePreferences.areNotificationsEnabled(context)
         val timeSinceLastNotification = SunshinePreferences.getEllapsedTimeSinceLastNotification(context)
@@ -113,6 +99,11 @@ class WeatherRepository {
     }
 
     companion object {
+
+        private const val TAG = "WeatherRepository"
+        private const val DEFAULT_WEATHER_LOCATION = "Moscow"
+        private const val STATIC_WEATHER_URL = "samples.openweathermap.org"
+
         private class InsertAsyncTask(private val mAsyncTaskDao: WeatherDao) : AsyncTask<WeatherEntry, Unit, Unit>() {
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {
                 mAsyncTaskDao.insert(params[0]!!)
@@ -132,53 +123,5 @@ class WeatherRepository {
             }
         }
     }
-}
-
-class SunshineSyncTask {
-
-    companion object {
-        private val TAG = "SunshineSyncTask"
-        private val STATIC_WEATHER_URL = "samples.openweathermap.org"
-        private lateinit var weather: ArrayList<WeatherEntry>
-
-        @Synchronized
-        fun syncWeather() {
-            val client = OkHttpClient()
-
-            val httpUrl = HttpUrl.Builder()
-                .scheme("https")
-                .host(STATIC_WEATHER_URL)
-                .addPathSegment("data")
-                .addPathSegment("2.5")
-                .addPathSegment("forecast")
-                .addPathSegment("daily")
-                .addQueryParameter("id", "524901")
-                .addQueryParameter("appid", "b1b15e88fa797225412429c1c50c122a1")
-                .build()
-
-            val request = Request.Builder()
-                .url(httpUrl)
-                .build()
-
-            client.newCall(request).enqueue(object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    val jsonString = response.body()!!.string()
-                    Log.d(TAG, "onResponse: $jsonString")
-                    weather = JsonUtil.getSimpleWeatherStringsFromJson(
-                        SuperApplication.getContext()
-                        , jsonString
-                    )
-                    for (i in 0 until weather.size) {
-                        WeatherRepository().insert(weather[i])
-                    }
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                }
-            })
-        }
-    }
-
-
 }
 

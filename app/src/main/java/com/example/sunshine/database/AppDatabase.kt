@@ -3,10 +3,9 @@ package com.example.sunshine.database
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.TypeConverters
 import android.content.Context
 
-@Database(entities = [WeatherEntry::class], version = 3, exportSchema = false)
+@Database(entities = [WeatherEntry::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
         private const val TAG = "AppDatabase"

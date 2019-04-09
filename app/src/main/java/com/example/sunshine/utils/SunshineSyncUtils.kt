@@ -48,7 +48,7 @@ class SunshineSyncUtils {
             }
         }
 
-        fun scheduleFirebaseJobDispatcherSync(context: Context) {
+        private fun scheduleFirebaseJobDispatcherSync(context: Context) {
             val driver = GooglePlayDriver(context)
             val dispatcher = FirebaseJobDispatcher(driver)
             val syncSunshineJob = dispatcher.newJobBuilder()

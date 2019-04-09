@@ -23,7 +23,7 @@ class SunshinePreferences {
             return Pref.getBoolean(displayNotificationsKey, shouldDisplayNotificationsByDefault)
         }
 
-        fun getLastNotificationTimeInMillis(context: Context): Long {
+        private fun getLastNotificationTimeInMillis(context: Context): Long {
             val lastNotificationKey = context.getString(R.string.pref_last_notification)
             return Pref.getLong(lastNotificationKey, 0)
         }

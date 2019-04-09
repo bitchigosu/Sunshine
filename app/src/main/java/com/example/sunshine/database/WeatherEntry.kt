@@ -1,10 +1,7 @@
 package com.example.sunshine.database
 
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
-import io.reactivex.annotations.NonNull
-import java.util.*
 
 @Entity(tableName = "weathers")
 class WeatherEntry(
@@ -13,8 +10,8 @@ class WeatherEntry(
     private var city: String,
     private var date: String,
     private var weatherDesc: String,
-    private var maxTemp: Double,
-    private var minTemp: Double,
+    private var maxTemp: Int,
+    private var minTemp: Int,
     private var windSpeed: Double,
     private var pressure: Double
 ) {
@@ -40,42 +37,42 @@ class WeatherEntry(
     )*/
 
     fun getId(): Int? = id
-    public fun setId(id: Int) {
+    fun setId(id: Int) {
         this.id = id
     }
 
-    public fun getCity(): String = city
-    public fun setCity(city: String) {
+    fun getCity(): String = city
+    fun setCity(city: String) {
         this.city = city
     }
 
-    public fun getWeatherDesc(): String = weatherDesc
-    public fun setWeatherDesc(weatherId: String) {
+    fun getWeatherDesc(): String = weatherDesc
+    fun setWeatherDesc(weatherId: String) {
         this.weatherDesc = weatherId
     }
 
-    public fun getMaxTemp(): Double = maxTemp
-    public fun setMaxTemp(maxTemp: Double) {
+    fun getMaxTemp(): Int = maxTemp
+    fun setMaxTemp(maxTemp: Int) {
         this.maxTemp = maxTemp
     }
 
-    public fun getWindSpeed(): Double = windSpeed
-    public fun setWindSpeed(windSpeed: Double) {
+    fun getWindSpeed(): Double = windSpeed
+    fun setWindSpeed(windSpeed: Double) {
         this.windSpeed = windSpeed
     }
 
-    public fun getPressure(): Double = pressure
-    public fun setPressure(pressure: Double) {
+    fun getPressure(): Double = pressure
+    fun setPressure(pressure: Double) {
         this.pressure = pressure
     }
 
-    public fun getMinTemp(): Double = minTemp
-    public fun setMinTemp(minTemp: Double) {
+    fun getMinTemp(): Int = minTemp
+    fun setMinTemp(minTemp: Int) {
         this.minTemp = minTemp
     }
 
-    public fun getDate(): String = date
-    public fun setDate(date: String) {
+    fun getDate(): String = date
+    fun setDate(date: String) {
         this.date = date
     }
 

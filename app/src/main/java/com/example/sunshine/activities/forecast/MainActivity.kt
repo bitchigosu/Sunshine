@@ -37,14 +37,17 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         SunshineSyncUtils.initialize(this)
 
         mAdapter = WeatherAdapter { position ->
-            onClickFun(position)}
+            onClickFun(position)
+        }
         recyclerView.adapter = mAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
         setProgressBar(true)
-        mViewModel = ViewModelProviders.of(this,
-            ViewModelFactory()).get(WeatherViewModel::class.java)
+        mViewModel = ViewModelProviders.of(
+            this,
+            ViewModelFactory()
+        ).get(WeatherViewModel::class.java)
         mViewModel.getCachedWeather().observe(this, Observer {
             mAdapter.updateData(it!!)
             setProgressBar(false)
@@ -78,6 +81,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun onClickFun(position: Int) {
         val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("WeatherPos", position)
         startActivity(intent)
     }
 

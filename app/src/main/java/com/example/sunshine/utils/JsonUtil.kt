@@ -1,14 +1,14 @@
 package com.example.sunshine.utils
 
 import android.content.Context
-import org.json.JSONObject
-import org.json.JSONException
-import java.net.HttpURLConnection
-import java.util.*
 import android.text.format.DateUtils
-import com.example.sunshine.database.DateConverter
+import com.example.sunshine.R
 import com.example.sunshine.database.WeatherEntry
+import org.json.JSONException
+import org.json.JSONObject
+import java.net.HttpURLConnection
 import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -16,34 +16,35 @@ class JsonUtil {
 
 
     companion object {
-        const val SECOND_IN_MILLIS = 1000
-        const val MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60
-        const val HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60
-        const val DAY_IN_MILLIS = HOUR_IN_MILLIS * 24
+        private const val SECOND_IN_MILLIS = 1000
+        private const val MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60
+        private const val HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60
+        private const val DAY_IN_MILLIS = HOUR_IN_MILLIS * 24
+        const val OWM_LIST = "list"
+
+        /* All temperatures are children of the "temp" object */
+        private const val OWM_TEMPERATURE = "temp"
+
+        /* Max temperature for the day */
+        private const val OWM_MAX = "max"
+        private const val OWM_MIN = "min"
+
+        private const val OMW_PRESSURE = "pressure"
+        private const val OWM_SPEED = "speed"
+
+        private const val OWM_WEATHER = "weather"
+        private const val OWM_DESCRIPTION = "main"
+
+        private const val OWM_MESSAGE_CODE = "cod"
+
+        private const val OWM_CITY = "city"
+        private const val OWM_CITY_NAME = "name"
 
         @Throws(JSONException::class)
         fun getSimpleWeatherStringsFromJson(context: Context, forecastJsonStr: String): ArrayList<WeatherEntry> {
 
             /* Weather information. Each day's forecast info is an element of the "list" array */
-            val OWM_LIST = "list"
 
-            /* All temperatures are children of the "temp" object */
-            val OWM_TEMPERATURE = "temp"
-
-            /* Max temperature for the day */
-            val OWM_MAX = "max"
-            val OWM_MIN = "min"
-
-            val OMW_PRESSURE = "pressure"
-            val OWM_SPEED = "speed"
-
-            val OWM_WEATHER = "weather"
-            val OWM_DESCRIPTION = "main"
-
-            val OWM_MESSAGE_CODE = "cod"
-
-            val OWM_CITY = "city"
-            val OWM_CITY_NAME = "name"
 
             /* String array to hold each day's weather String */
             val weatherData = ArrayList<WeatherEntry>()
@@ -76,9 +77,8 @@ class JsonUtil {
 
             for (i in 0 until weatherArray.length()) {
                 /* These are the values that will be collected */
-                val dateTimeMillis: Long = startDay + DAY_IN_MILLIS * i
-                val high: Double
-                val low: Double
+                val high: Int
+                val low: Int
                 val pressure: Double
                 val speed: Double
                 val description: String
@@ -89,7 +89,7 @@ class JsonUtil {
                 pressure = dayForecast.getDouble(OMW_PRESSURE)
                 speed = dayForecast.getDouble(OWM_SPEED)
                 timeInMillis = dayForecast.getLong("dt")
-                val date = SimpleDateFormat("EEE, MMM d, ''yy", Locale.UK).format(timeInMillis)
+                val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(timeInMillis)
 
                 /*
                  * Description is in a child array called "weather", which is 1 element long.
@@ -106,14 +106,30 @@ class JsonUtil {
                  * temperature, temporary and is just a bad variable name.
                  */
                 val temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE)
-                high = temperatureObject.getDouble(OWM_MAX)
-                low = temperatureObject.getDouble(OWM_MIN)
-                weatherData.add(WeatherEntry(id = i,city = cityName, date = date,
-                    weatherDesc = description, maxTemp = high, minTemp = low, windSpeed = speed, pressure = pressure))
+                high = (temperatureObject.getDouble(OWM_MAX) - 273.15).toInt()
+                low = (temperatureObject.getDouble(OWM_MIN) - 273.15).toInt()
+                weatherData.add(
+                    WeatherEntry(
+                        id = i, city = cityName, date = date,
+                        weatherDesc = description, maxTemp = high, minTemp = low, windSpeed = speed, pressure = pressure
+                    )
+                )
 
             }
 
             return weatherData
+        }
+
+        fun getSmallArtResourceIdForWeatherCondition(desc: String): Int = when (desc) {
+            "Clear" -> R.drawable.art_clear
+            "Snow" -> R.drawable.art_snow
+            "Cloudy" -> R.drawable.art_clouds
+            "Fog" -> R.drawable.art_fog
+            "Light Clouds" -> R.drawable.art_light_clouds
+            "Light Rain" -> R.drawable.art_light_rain
+            "Rain" -> R.drawable.art_rain
+            "Storm" -> R.drawable.art_storm
+            else -> R.drawable.ic_launcher_background
         }
 
         private fun getUTCDateFromLocal(localDate: Long): Long {

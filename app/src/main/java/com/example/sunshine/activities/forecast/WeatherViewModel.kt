@@ -8,7 +8,6 @@ class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() 
     private val weatherResult : LiveData<List<WeatherEntry>> = repository.getWeatherData()
 
     fun getCachedWeather(): LiveData<List<WeatherEntry>> = weatherResult
-    fun insert(weather: WeatherEntry) = repository.insert(weather)
     fun clear() {
         repository.clear()
     }
