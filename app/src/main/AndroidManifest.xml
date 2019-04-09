@@ -33,7 +33,7 @@
                     android:value=".activities.forecast.MainActivity"/>
         </activity>
 
-        <service android:name=".activities.forecast.SunshineSyncIntentService"
+        <service android:name=".utils.SunshineSyncIntentService"
                  android:exported="false"/>
         <service android:name=".SunshineFirebaseJobService"
                  android:exported="false">

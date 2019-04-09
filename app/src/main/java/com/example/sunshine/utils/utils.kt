@@ -1,5 +1,6 @@
-package com.example.sunshine
+package com.example.sunshine.utils
 
+import com.example.sunshine.SuperApplication
 import com.example.sunshine.database.AppDatabase
 
 val db = AppDatabase.getInstance(SuperApplication.getContext())

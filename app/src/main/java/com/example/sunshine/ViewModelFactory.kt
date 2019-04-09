@@ -1,4 +1,4 @@
-package com.example.sunshine.activities
+package com.example.sunshine
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

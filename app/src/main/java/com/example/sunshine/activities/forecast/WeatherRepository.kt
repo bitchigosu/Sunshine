@@ -14,8 +14,8 @@ import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.database.WeatherDao
 import com.example.sunshine.database.WeatherEntry
-import com.example.sunshine.mAllWeather
-import com.example.sunshine.mWeatherDao
+import com.example.sunshine.utils.mAllWeather
+import com.example.sunshine.utils.mWeatherDao
 import com.example.sunshine.utils.JsonUtil
 import com.example.sunshine.utils.SunshinePreferences
 import okhttp3.*

@@ -8,7 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.sunshine.R
 import com.example.sunshine.activities.settings.SettingsActivity
-import com.example.sunshine.mWeatherDao
+import com.example.sunshine.utils.mWeatherDao
 import com.example.sunshine.utils.JsonUtil
 import kotlinx.android.synthetic.main.extra_weather_detail.*
 import kotlinx.android.synthetic.main.primary_weather_info.*

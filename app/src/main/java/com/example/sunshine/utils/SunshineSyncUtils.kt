@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import com.example.sunshine.SunshineFirebaseJobService
-import com.example.sunshine.activities.forecast.SunshineSyncIntentService
-import com.example.sunshine.mWeatherDao
 import com.firebase.jobdispatcher.*
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit

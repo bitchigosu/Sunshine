@@ -12,7 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.example.sunshine.R
-import com.example.sunshine.activities.ViewModelFactory
+import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.activities.settings.SettingsActivity
 
