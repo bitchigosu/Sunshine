@@ -13,7 +13,8 @@ class WeatherEntry(
     private var maxTemp: Int,
     private var minTemp: Int,
     private var windSpeed: Double,
-    private var pressure: Double
+    private var pressure: Double,
+    private var iconId: String
 ) {
 
 /*    @Ignore
@@ -74,6 +75,11 @@ class WeatherEntry(
     fun getDate(): String = date
     fun setDate(date: String) {
         this.date = date
+    }
+
+    fun getIconId(): String = iconId
+    fun setIconId(iconId: String) {
+        this.iconId = iconId
     }
 
 

@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tool="http://schemas.android.com/tools"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:padding="12dp">
 
@@ -18,6 +19,7 @@
     <TextView
             android:id="@+id/day_text"
             tool:text="Day"
+            android:textColor="#000"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,8 +28,9 @@
             app:layout_constraintStart_toEndOf="@id/forecast_icon"/>
     <TextView
             android:id="@+id/weather_description_text"
-            tool:text="Description"
+            tool:text="Mostly cloudy until evening and breezy in the afternoon."
             android:textSize="16sp"
+            android:maxWidth="150dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@id/day_text"

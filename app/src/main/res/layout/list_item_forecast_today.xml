@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
-        android:paddingTop="16dp">
+        android:paddingStart="16dp">
     <android.support.constraint.Guideline
             android:id="@+id/horizontal_middle"
             android:layout_width="wrap_content"
@@ -41,13 +41,15 @@
             android:id="@+id/weather_description_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="180dp"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
             android:textSize="20sp"
             app:layout_constraintHorizontal_bias="0.52"
             app:layout_constraintLeft_toLeftOf="@+id/forecast_icon"
             app:layout_constraintRight_toRightOf="@+id/forecast_icon"
             app:layout_constraintTop_toBottomOf="@+id/forecast_icon"
-            tools:text="Rainy"/>
+            tools:text="Mostly cloudy until evening and breezy in the afternoon."/>
 
     <TextView
             android:id="@+id/max_temp_text"

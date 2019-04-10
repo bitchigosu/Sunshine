@@ -43,12 +43,16 @@ class WeatherAdapter(private val listener: (Int) -> Unit) :
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         with(holder.view) {
             val current = weatherData[position]
-            val weatherId: Int = JsonUtil.getSmallArtResourceIdForWeatherCondition(current.getWeatherDesc())
-            forecast_icon.setImageDrawable(ContextCompat.getDrawable(SuperApplication.getContext(),weatherId))
+            forecast_icon.setImageDrawable(
+                ContextCompat.getDrawable(
+                    SuperApplication.getContext(),
+                    JsonUtil.getIcon(current.getIconId())
+                )
+            )
             day_text.text = current.getDate()
             weather_description_text.text = current.getWeatherDesc()
-            max_temp_text.text = current.getMaxTemp().toString()
-            min_temp_text.text = current.getMinTemp().toString()
+            max_temp_text.text = current.getMaxTemp().toString() + "°"
+            min_temp_text.text = current.getMinTemp().toString() + "°"
             setOnClickListener { listener(position) }
         }
     }

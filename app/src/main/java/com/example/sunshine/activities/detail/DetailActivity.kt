@@ -28,13 +28,16 @@ class DetailActivity : AppCompatActivity() {
         GlobalScope.launch {
             val data = mWeatherDao.getWeatherById(position)
             with(this@DetailActivity) {
-                val weatherDesc = data.getWeatherDesc()
-                forecast_icon.setImageDrawable(ContextCompat.getDrawable(this@DetailActivity,
-                    JsonUtil.getSmallArtResourceIdForWeatherCondition(weatherDesc)))
+                forecast_icon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this@DetailActivity,
+                        JsonUtil.getIcon(data.getIconId())
+                    )
+                )
                 day_text.text = data.getDate()
                 weather_description_text.text = data.getWeatherDesc()
-                max_temp_text.text = data.getMaxTemp().toString()
-                min_temp_text.text = data.getMinTemp().toString()
+                max_temp_text.text = data.getMaxTemp().toString() + "°"
+                min_temp_text.text = data.getMinTemp().toString() + "°"
                 pressure_value.text = data.getPressure().toString()
                 wind_value.text = data.getWindSpeed().toString()
             }

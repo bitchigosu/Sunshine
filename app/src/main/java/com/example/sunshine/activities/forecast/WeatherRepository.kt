@@ -23,6 +23,7 @@ import java.io.IOException
 
 class WeatherRepository {
 
+
     private lateinit var weather: ArrayList<WeatherEntry>
 
     fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask(mWeatherDao).execute()
@@ -37,12 +38,9 @@ class WeatherRepository {
         val httpUrl = HttpUrl.Builder()
             .scheme("https")
             .host(STATIC_WEATHER_URL)
-            .addPathSegment("data")
-            .addPathSegment("2.5")
             .addPathSegment("forecast")
-            .addPathSegment("daily")
-            .addQueryParameter("id", "524901")
-            .addQueryParameter("appid", "b1b15e88fa797225412429c1c50c122a1")
+            .addPathSegment("dff00a22931b903b6168466d0a34cc2c")
+            .addPathSegment("37.8267,-122.4233")
             .build()
 
         val request = Request.Builder()
@@ -102,7 +100,7 @@ class WeatherRepository {
 
         private const val TAG = "WeatherRepository"
         private const val DEFAULT_WEATHER_LOCATION = "Moscow"
-        private const val STATIC_WEATHER_URL = "samples.openweathermap.org"
+        private const val STATIC_WEATHER_URL = "api.darksky.net"
 
         private class InsertAsyncTask(private val mAsyncTaskDao: WeatherDao) : AsyncTask<WeatherEntry, Unit, Unit>() {
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {
