@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -33,7 +34,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         setContentView(R.layout.activity_main)
 
         Pref.registerListener(this)
-
         SunshineSyncUtils.initialize(this)
 
         mAdapter = WeatherAdapter { position ->
@@ -70,11 +70,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
 
             getString(R.string.pref_units_key) -> {
-                Toast.makeText(
-                    this,
-                    "Units is ${SunshinePreferences.getPreferredWeatherUnits(this)}",
-                    Toast.LENGTH_LONG
-                ).show()
+                mViewModel.clear()
             }
         }
     }
@@ -110,7 +106,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private fun setProgressBar(b: Boolean) {
         runOnUiThread {
             if (b) progressBar.visibility = View.VISIBLE
-            else progressBar.visibility = View.INVISIBLE
+            else progressBar.visibility = View.GONE
         }
     }
 }

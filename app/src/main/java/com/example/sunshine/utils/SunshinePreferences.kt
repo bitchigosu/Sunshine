@@ -14,7 +14,7 @@ class SunshinePreferences {
         fun getPreferredWeatherUnits(context: Context): String =
             Pref.getString(
                 context.getString(R.string.pref_units_key),
-                ""
+                "si"
             )
 
         fun areNotificationsEnabled(context: Context): Boolean {

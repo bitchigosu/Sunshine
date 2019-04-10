@@ -6,7 +6,7 @@
     </array>
 
     <array name="pref_units_values">
-        <item>metric</item>
-        <item>imperial</item>
+        <item>si</item>
+        <item>us</item>
     </array>
 </resources>

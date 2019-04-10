@@ -8,7 +8,7 @@
             android:title="@string/location_label"/>
 
     <ListPreference
-            android:defaultValue="Celsius"
+            android:defaultValue="si"
             android:entries="@array/pref_units_labels"
             android:entryValues="@array/pref_units_values"
             android:key="@string/pref_units_key"

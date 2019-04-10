@@ -80,15 +80,15 @@ class JsonUtil {
                 val windSpeed = dayForecast.getDouble("windSpeed")
                 val icon = dayForecast.getString("icon")
 
-                val newTempHigh = convertTemperature(context, tempHigh)
-                val newTempLow = convertTemperature(context, tempLow)
+/*                val newTempHigh = convertTemperature(context, tempHigh)
+                val newTempLow = convertTemperature(context, tempLow)*/
 
                 val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(timeInMillis)
 
                 weatherData.add(
                     WeatherEntry(
                         id = i, city = cityName, date = date,
-                        weatherDesc = weatherDesc, maxTemp = newTempHigh, minTemp = newTempLow,
+                        weatherDesc = weatherDesc, maxTemp = tempHigh.toInt(), minTemp = tempLow.toInt(),
                         pressure = pressure, windSpeed = windSpeed, iconId = icon
                     )
                 )

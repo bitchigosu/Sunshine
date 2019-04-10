@@ -14,10 +14,7 @@ import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.database.WeatherDao
 import com.example.sunshine.database.WeatherEntry
-import com.example.sunshine.utils.mAllWeather
-import com.example.sunshine.utils.mWeatherDao
-import com.example.sunshine.utils.JsonUtil
-import com.example.sunshine.utils.SunshinePreferences
+import com.example.sunshine.utils.*
 import okhttp3.*
 import java.io.IOException
 
@@ -32,8 +29,8 @@ class WeatherRepository {
 
     @Synchronized
     fun getWeatherData(): LiveData<List<WeatherEntry>> {
-        Log.d(TAG, "getWeatherData: inside getWeatherData ")
         val client = OkHttpClient()
+        val context = SuperApplication.getContext()
 
         val httpUrl = HttpUrl.Builder()
             .scheme("https")
@@ -41,18 +38,20 @@ class WeatherRepository {
             .addPathSegment("forecast")
             .addPathSegment("dff00a22931b903b6168466d0a34cc2c")
             .addPathSegment("37.8267,-122.4233")
+            .addQueryParameter("units",SunshinePreferences.getPreferredWeatherUnits(context))
             .build()
 
         val request = Request.Builder()
             .url(httpUrl)
             .build()
+        Log.d(TAG, "getWeatherData: $request")
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val jsonString = response.body()!!.string()
                 Log.d(TAG, "onResponse: $jsonString")
                 weather = JsonUtil.getSimpleWeatherStringsFromJson(
-                    SuperApplication.getContext()
+                    context
                     , jsonString
                 )
                 for (i in 0 until weather.size) {
