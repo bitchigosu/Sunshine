@@ -9,6 +9,7 @@ open class SunshineFirebaseJobService : JobService() {
     private lateinit var mFetchWeatherTask: FetchWeatherTask
 
     override fun onStartJob(job: JobParameters): Boolean {
+        mFetchWeatherTask = FetchWeatherTask()
         mFetchWeatherTask.execute()
         jobFinished(job, false)
         return true

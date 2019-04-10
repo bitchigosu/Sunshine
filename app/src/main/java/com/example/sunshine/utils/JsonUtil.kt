@@ -20,7 +20,7 @@ class JsonUtil {
         private const val MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60
         private const val HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60
         private const val DAY_IN_MILLIS = HOUR_IN_MILLIS * 24
-        const val OWM_LIST = "list"
+        private const val OWM_LIST = "list"
 
         /* All temperatures are children of the "temp" object */
         private const val OWM_TEMPERATURE = "temp"
