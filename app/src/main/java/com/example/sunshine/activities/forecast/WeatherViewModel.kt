@@ -7,7 +7,7 @@ import com.example.sunshine.database.WeatherEntry
 class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() {
     private val weatherResult : LiveData<List<WeatherEntry>> = repository.getWeatherData()
 
-    fun getCachedWeather(): LiveData<List<WeatherEntry>> = weatherResult
+    fun getNewWeather(): LiveData<List<WeatherEntry>> = weatherResult
     fun clear() {
         repository.clear()
     }

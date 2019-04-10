@@ -4,12 +4,11 @@ import android.arch.persistence.room.*
 import android.arch.lifecycle.LiveData
 
 
-
 @Dao
 interface WeatherDao {
 
     @Query("SELECT * FROM weathers")
-    fun getAllWeather():  LiveData<List<WeatherEntry>>
+    fun getAllWeather(): LiveData<List<WeatherEntry>>
 
     @Query("SELECT COUNT(*) FROM weathers")
     fun getRowCount(): Int
@@ -19,6 +18,9 @@ interface WeatherDao {
 
     @Query("DELETE FROM weathers")
     fun deleteAll()
+
+    @Query("UPDATE weathers SET minTemp=:minTemp, maxTemp=:maxTemp WHERE id=:id")
+    fun updateTemperatureValues(minTemp: Int, maxTemp: Int, id: Int)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateWeather(weatherEntry: WeatherEntry)

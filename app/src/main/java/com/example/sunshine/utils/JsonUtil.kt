@@ -74,21 +74,23 @@ class JsonUtil {
                 val dayForecast = data.getJSONObject(i)
                 val timeInMillis = dayForecast.getLong("time")
                 val weatherDesc = dayForecast.getString("summary")
-                val tempHigh = dayForecast.getDouble("temperatureHigh")
-                val tempLow = dayForecast.getDouble("temperatureLow")
+                var tempHigh = dayForecast.getDouble("temperatureHigh").toInt()
+                var tempLow = dayForecast.getDouble("temperatureLow").toInt()
                 val pressure = dayForecast.getDouble("pressure")
                 val windSpeed = dayForecast.getDouble("windSpeed")
                 val icon = dayForecast.getString("icon")
-
-/*                val newTempHigh = convertTemperature(context, tempHigh)
-                val newTempLow = convertTemperature(context, tempLow)*/
-
                 val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(timeInMillis)
+
+                if (SunshinePreferences.getPreferredWeatherUnits(context) == "si") {
+                    tempHigh = convertTemperature(tempHigh)
+                    tempLow = convertTemperature(tempLow)
+                }
+
 
                 weatherData.add(
                     WeatherEntry(
                         id = i, city = cityName, date = date,
-                        weatherDesc = weatherDesc, maxTemp = tempHigh.toInt(), minTemp = tempLow.toInt(),
+                        weatherDesc = weatherDesc, maxTemp = tempHigh, minTemp = tempLow,
                         pressure = pressure, windSpeed = windSpeed, iconId = icon
                     )
                 )
@@ -97,13 +99,7 @@ class JsonUtil {
             return weatherData
         }
 
-        private fun convertTemperature(context: Context, temp: Double): Int {
-            val preferredUnits = SunshinePreferences.getPreferredWeatherUnits(context)
-            if (preferredUnits == "metric") {
-                return ((temp - 32) * 5 / 9).toInt()
-            }
-            return temp.toInt()
-        }
+        private fun convertTemperature(temp: Int): Int = ((temp - 32) * 5 / 9)
 
         fun getIcon(desc: String): Int = when (desc) {
             "clear-day" -> R.drawable.art_clear

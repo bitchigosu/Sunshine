@@ -28,7 +28,7 @@ class SunshinePreferences {
             return Pref.getLong(lastNotificationKey, 0)
         }
 
-        fun getEllapsedTimeSinceLastNotification(context: Context): Long {
+        fun getElapsedTimeSinceLastNotification(context: Context): Long {
             val lastNotificationTimeMillis = SunshinePreferences.getLastNotificationTimeInMillis(context)
             return System.currentTimeMillis() - lastNotificationTimeMillis
         }

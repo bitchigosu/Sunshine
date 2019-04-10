@@ -7,25 +7,21 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.activities.settings.SettingsActivity
 
 import com.example.sunshine.utils.Pref
-import com.example.sunshine.utils.SunshinePreferences
 import com.example.sunshine.utils.SunshineSyncUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val TAG = "MainActivity"
-    private val DEFAULT_WEATHER_COORDINATES: DoubleArray = DoubleArray(2)
     private lateinit var mViewModel: WeatherViewModel
     private lateinit var mAdapter: WeatherAdapter
 
@@ -48,15 +44,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             this,
             ViewModelFactory()
         ).get(WeatherViewModel::class.java)
-        mViewModel.getCachedWeather().observe(this, Observer {
+        mViewModel.getNewWeather().observe(this, Observer {
             mAdapter.updateData(it!!)
             setProgressBar(false)
         })
-
-
-        DEFAULT_WEATHER_COORDINATES[0] = 37.4284
-        DEFAULT_WEATHER_COORDINATES[1] = 122.0724
-
     }
 
     override fun onDestroy() {
@@ -67,8 +58,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
             getString(R.string.pref_location_key) -> {
-            }
 
+            }
             getString(R.string.pref_units_key) -> {
                 mViewModel.clear()
             }

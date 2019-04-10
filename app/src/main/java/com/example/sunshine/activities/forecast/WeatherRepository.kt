@@ -23,9 +23,9 @@ class WeatherRepository {
 
     private lateinit var weather: ArrayList<WeatherEntry>
 
-    fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask(mWeatherDao).execute()
+    fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask().execute()
 
-    fun insert(weather: WeatherEntry) = InsertAsyncTask(mWeatherDao).execute(weather)!!
+    fun insert(weather: WeatherEntry) = InsertAsyncTask().execute(weather)!!
 
     @Synchronized
     fun getWeatherData(): LiveData<List<WeatherEntry>> {
@@ -37,8 +37,7 @@ class WeatherRepository {
             .host(STATIC_WEATHER_URL)
             .addPathSegment("forecast")
             .addPathSegment("dff00a22931b903b6168466d0a34cc2c")
-            .addPathSegment("37.8267,-122.4233")
-            .addQueryParameter("units",SunshinePreferences.getPreferredWeatherUnits(context))
+            .addPathSegment("55.751244,37.618423")
             .build()
 
         val request = Request.Builder()
@@ -70,7 +69,7 @@ class WeatherRepository {
     private fun notifications() {
         val context = SuperApplication.getContext()
         val notificationsEnabled = SunshinePreferences.areNotificationsEnabled(context)
-        val timeSinceLastNotification = SunshinePreferences.getEllapsedTimeSinceLastNotification(context)
+        val timeSinceLastNotification = SunshinePreferences.getElapsedTimeSinceLastNotification(context)
         var oneDayPassedSinceLastNotification = false
         if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
             oneDayPassedSinceLastNotification = true
@@ -101,17 +100,17 @@ class WeatherRepository {
         private const val DEFAULT_WEATHER_LOCATION = "Moscow"
         private const val STATIC_WEATHER_URL = "api.darksky.net"
 
-        private class InsertAsyncTask(private val mAsyncTaskDao: WeatherDao) : AsyncTask<WeatherEntry, Unit, Unit>() {
+        private class InsertAsyncTask : AsyncTask<WeatherEntry, Unit, Unit>() {
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {
-                mAsyncTaskDao.insert(params[0]!!)
+                mWeatherDao.insert(params[0]!!)
                 return null
             }
         }
 
-        private class DeleteAsyncTask(private val mAsyncTaskDao: WeatherDao) : AsyncTask<WeatherEntry, Unit, Unit>() {
+        private class DeleteAsyncTask : AsyncTask<WeatherEntry, Unit, Unit>() {
             private val TAG = "DeleteAsyncTask"
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {
-                mAsyncTaskDao.deleteAll()
+                mWeatherDao.deleteAll()
                 return null
             }
 
