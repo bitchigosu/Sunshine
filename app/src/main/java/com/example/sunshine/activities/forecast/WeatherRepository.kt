@@ -1,9 +1,12 @@
 package com.example.sunshine.activities.forecast
 
+import android.app.Activity
 import android.app.PendingIntent
 import android.arch.lifecycle.LiveData
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.AsyncTask
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.TaskStackBuilder
@@ -12,15 +15,17 @@ import android.util.Log
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.detail.DetailActivity
-import com.example.sunshine.database.WeatherDao
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
+
+import com.google.android.gms.location.*
 import okhttp3.*
 import java.io.IOException
 
 class WeatherRepository {
 
-
+    private lateinit var mLocationRequest: LocationRequest
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var weather: ArrayList<WeatherEntry>
 
     fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask().execute()
@@ -91,6 +96,39 @@ class WeatherRepository {
                 notify(3004, notificationBuilder.build())
             }
             SunshinePreferences.saveLastNotificationTime(context, System.currentTimeMillis())
+        }
+    }
+
+    fun getLocation(activity: Activity) {
+        val context = SuperApplication.getContext()
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 34
+            )
+        }
+        mLocationRequest = LocationRequest()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(10 * 1000)
+            .setFastestInterval(2000)
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
+            Log.d(TAG, "onLocationResult: ${it.longitude} and ${it.latitude}")
+        }
+        mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
+
+
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult?) {
+            val location = p0?.lastLocation
+            if (location != null) {
+                Log.d(TAG, "onLocationResult: ${location.longitude} and ${location.latitude}")
+            }
         }
     }
 

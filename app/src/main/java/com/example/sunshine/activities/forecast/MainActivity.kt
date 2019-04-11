@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.btn_searchBar -> {
             mViewModel.clear()
+            mViewModel.testLocation(this@MainActivity)
             true
         }
 
