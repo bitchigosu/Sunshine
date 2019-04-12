@@ -11,7 +11,4 @@ class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() 
     fun clear() {
         repository.clear()
     }
-    fun testLocation(activity: MainActivity) {
-        repository.getLocation(activity)
-    }
 }

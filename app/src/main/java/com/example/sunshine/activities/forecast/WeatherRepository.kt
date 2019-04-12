@@ -3,15 +3,15 @@ package com.example.sunshine.activities.forecast
 import android.app.Activity
 import android.app.PendingIntent
 import android.arch.lifecycle.LiveData
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.AsyncTask
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
-import android.support.v4.app.TaskStackBuilder
+import android.support.v4.app.*
 import android.text.format.DateUtils
 import android.util.Log
+import android.widget.Toast
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.detail.DetailActivity
@@ -19,6 +19,9 @@ import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
 
 import com.google.android.gms.location.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import java.io.IOException
 
@@ -37,12 +40,23 @@ class WeatherRepository {
         val client = OkHttpClient()
         val context = SuperApplication.getContext()
 
+        getLocation(MainActivity.getWeakActivity().get() as Activity) {
+            val latitude = it.latitude
+            val longitude = it.longitude
+            makeRequest(context = context, client = client, latitude = latitude, longitude = longitude)
+        }
+        notifications()
+        mAllWeather = mWeatherDao.getAllWeather()
+        return mAllWeather
+    }
+
+    private fun makeRequest(context: Context, client: OkHttpClient, latitude: Double, longitude: Double) {
         val httpUrl = HttpUrl.Builder()
             .scheme("https")
             .host(STATIC_WEATHER_URL)
             .addPathSegment("forecast")
             .addPathSegment("dff00a22931b903b6168466d0a34cc2c")
-            .addPathSegment("55.751244,37.618423")
+            .addPathSegment("$latitude,$longitude")
             .build()
 
         val request = Request.Builder()
@@ -66,9 +80,6 @@ class WeatherRepository {
             override fun onFailure(call: Call, e: IOException) {
             }
         })
-        notifications()
-        mAllWeather = mWeatherDao.getAllWeather()
-        return mAllWeather
     }
 
     private fun notifications() {
@@ -99,7 +110,7 @@ class WeatherRepository {
         }
     }
 
-    fun getLocation(activity: Activity) {
+    private fun getLocation(activity: Activity, completion: (Location) -> Unit) {
         val context = SuperApplication.getContext()
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
@@ -111,29 +122,26 @@ class WeatherRepository {
         }
         mLocationRequest = LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(10 * 1000)
-            .setFastestInterval(2000)
+            .setInterval(1800000)
+            .setFastestInterval(1500000)
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            Log.d(TAG, "onLocationResult: ${it.longitude} and ${it.latitude}")
-        }
         mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
-
-
+        mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
+            completion(it)
+        }
     }
+
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult?) {
             val location = p0?.lastLocation
             if (location != null) {
-                Log.d(TAG, "onLocationResult: ${location.longitude} and ${location.latitude}")
             }
         }
     }
 
     companion object {
-
         private const val TAG = "WeatherRepository"
         private const val DEFAULT_WEATHER_LOCATION = "Moscow"
         private const val STATIC_WEATHER_URL = "api.darksky.net"

@@ -18,6 +18,7 @@ import com.example.sunshine.activities.settings.SettingsActivity
 import com.example.sunshine.utils.Pref
 import com.example.sunshine.utils.SunshineSyncUtils
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.ref.WeakReference
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         Pref.registerListener(this)
         SunshineSyncUtils.initialize(this)
+        weakActivity = WeakReference(this)
 
         mAdapter = WeatherAdapter { position ->
             onClickFun(position)
@@ -80,7 +82,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.btn_searchBar -> {
             mViewModel.clear()
-            mViewModel.testLocation(this@MainActivity)
             true
         }
 
@@ -101,4 +102,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             else progressBar.visibility = View.GONE
         }
     }
+
+    companion object {
+        private lateinit var weakActivity: WeakReference<MainActivity>
+        fun getWeakActivity() = weakActivity
+    }
+
 }
