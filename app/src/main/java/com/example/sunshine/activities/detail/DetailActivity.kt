@@ -10,6 +10,7 @@ import com.example.sunshine.R
 import com.example.sunshine.activities.settings.SettingsActivity
 import com.example.sunshine.utils.mWeatherDao
 import com.example.sunshine.utils.JsonUtil
+import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.extra_weather_detail.*
 import kotlinx.android.synthetic.main.primary_weather_info.*
 import kotlinx.coroutines.GlobalScope
@@ -22,8 +23,15 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         position = intent.getIntExtra("WeatherPos", 0)
+
+        back_image.setOnClickListener {
+            finish()
+        }
+        settings_image.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
         GlobalScope.launch {
             val data = mWeatherDao.getWeatherById(position)
@@ -43,22 +51,4 @@ class DetailActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.detail_menu, menu)
-        return true
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
-        R.id.settingsBtn -> {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-            true
-        }
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
 }

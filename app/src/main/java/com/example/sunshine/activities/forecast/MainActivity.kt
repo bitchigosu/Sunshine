@@ -7,9 +7,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
@@ -37,19 +34,26 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         mAdapter = WeatherAdapter { position ->
             onClickFun(position)
         }
+
         recyclerView.adapter = mAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
-        setProgressBar(true)
         mViewModel = ViewModelProviders.of(
             this,
             ViewModelFactory()
         ).get(WeatherViewModel::class.java)
         mViewModel.getNewWeather().observe(this, Observer {
             mAdapter.updateData(it!!)
-            setProgressBar(false)
         })
+
+        refresh_image.setOnClickListener {
+            mViewModel.clear()
+        }
+        settings_image.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
@@ -72,35 +76,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra("WeatherPos", position)
         startActivity(intent)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
-        R.id.btn_searchBar -> {
-            mViewModel.clear()
-            true
-        }
-
-        R.id.settingsBtn -> {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-            true
-        }
-
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun setProgressBar(b: Boolean) {
-        runOnUiThread {
-            if (b) progressBar.visibility = View.VISIBLE
-            else progressBar.visibility = View.GONE
-        }
     }
 
     companion object {

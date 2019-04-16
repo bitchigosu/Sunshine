@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,7 +10,7 @@
     </style>
     <style name="ActionBar.Solid.Sunshine.NoTitle" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="displayOptions">useLogo|showHome</item>
-        <item name="android:logo">@drawable/art_clear</item>
+        <item name="android:logo">@drawable/art_light_clouds</item>
     </style>
     <style name="AppTheme.Forecast" parent="AppTheme">
         <item name="actionBarStyle">@style/ActionBar.Solid.Sunshine.NoTitle</item>
@@ -25,5 +25,17 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+    <dimen name="toolbar_height">50dp</dimen>
+    <style name="toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+    <style name="icon">
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:layout_width">@dimen/toolbar_height</item>
+        <item name="android:padding">10dp</item>
     </style>
 </resources>
