@@ -32,11 +32,11 @@
     <TextView
             android:id="@+id/weather_description_text"
             tool:text="Mostly cloudy until evening and breezy in the afternoon."
-            android:maxWidth="150dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/secondary_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/max_temp_text"
             app:layout_constraintStart_toStartOf="@id/day_text"
             app:layout_constraintTop_toTopOf="@id/guideline"/>
     <TextView

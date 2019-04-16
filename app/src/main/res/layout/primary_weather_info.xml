@@ -43,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:paddingBottom="8dp"
             android:maxWidth="150dp"
             android:textSize="20sp"
             android:textColor="@color/secondary_text"
@@ -51,6 +52,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/forecast_icon"
             app:layout_constraintRight_toRightOf="@+id/forecast_icon"
             app:layout_constraintTop_toBottomOf="@+id/forecast_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Mostly cloudy until evening and breezy in the afternoon."/>
 
     <TextView

@@ -40,7 +40,7 @@ class WeatherRepository {
         val client = OkHttpClient()
         val context = SuperApplication.getContext()
 
-        getLocation(MainActivity.getWeakActivity().get() as Activity) {
+        getLocation{
             val latitude = it.latitude
             val longitude = it.longitude
             makeRequest(context = context, client = client, latitude = latitude, longitude = longitude)
@@ -110,13 +110,13 @@ class WeatherRepository {
         }
     }
 
-    private fun getLocation(activity: Activity, completion: (Location) -> Unit) {
+    private fun getLocation(completion: (Location) -> Unit) {
         val context = SuperApplication.getContext()
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                activity,
+                MainActivity.getWeakActivity().get() as Activity,
                 arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 34
             )
         }
@@ -143,7 +143,6 @@ class WeatherRepository {
 
     companion object {
         private const val TAG = "WeatherRepository"
-        private const val DEFAULT_WEATHER_LOCATION = "Moscow"
         private const val STATIC_WEATHER_URL = "api.darksky.net"
 
         private class InsertAsyncTask : AsyncTask<WeatherEntry, Unit, Unit>() {
