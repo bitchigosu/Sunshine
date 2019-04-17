@@ -14,37 +14,41 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activities.forecast.MainActivity"
-                  android:theme="@style/AppTheme.Forecast"
-                  android:launchMode="singleTop">
+        <activity android:name=".NewLocation">
+        </activity>
+        <activity
+                android:name=".activities.forecast.MainActivity"
+                android:launchMode="singleTop"
+                android:theme="@style/AppTheme.Forecast">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.settings.SettingsActivity"
-                  android:label="@string/settings">
+        <activity
+                android:name=".activities.settings.SettingsActivity"
+                android:label="@string/settings">
         </activity>
-
-        <activity android:name=".activities.detail.DetailActivity"
-                  android:label="Detailed Info"
-                  android:parentActivityName=".activities.forecast.MainActivity">
+        <activity
+                android:name=".activities.detail.DetailActivity"
+                android:label="Detailed Info"
+                android:parentActivityName=".activities.forecast.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".activities.forecast.MainActivity"/>
         </activity>
 
-        <service android:name=".utils.SunshineSyncIntentService"
-                 android:exported="false"/>
-        <service android:name=".SunshineFirebaseJobService"
-                 android:exported="false">
+        <service
+                android:name=".utils.SunshineSyncIntentService"
+                android:exported="false"/>
+        <service
+                android:name=".SunshineFirebaseJobService"
+                android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>
         </service>
-
-
     </application>
 
 </manifest>

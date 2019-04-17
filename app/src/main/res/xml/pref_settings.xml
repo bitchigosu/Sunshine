@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
-            android:defaultValue="Mountain View, CA 94043"
-            android:inputType="text"
+    <ListPreference
+            android:defaultValue="current_location"
             android:key="@string/pref_location_key"
-            android:singleLine="true"
-            android:title="@string/location_label"/>
+            android:title="Location"
+            android:entries="@array/pref_location_labels"
+            android:entryValues="@array/pref_location_values"/>
 
     <ListPreference
             android:defaultValue="si"

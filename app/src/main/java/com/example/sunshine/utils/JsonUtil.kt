@@ -102,6 +102,20 @@ class JsonUtil {
             return weatherData
         }
 
+        @Throws(JSONException::class)
+        fun getGeocode(geocodeJSON: String): DoubleArray {
+            val array = DoubleArray(2)
+            val decode = JSONObject(geocodeJSON)
+            val results = decode.getJSONArray("results")
+            val n = results.getJSONObject(0)
+            val geometry = n.getJSONObject("geometry")
+            val lat = geometry.getDouble("lat")
+            val lng = geometry.getDouble("lng")
+            array[0] = lat
+            array[1] = lng
+            return array
+        }
+
         private fun convertTemperature(temp: Int): Int = ((temp - 32) * 5 / 9)
 
         fun getIcon(desc: String): Int = when (desc) {

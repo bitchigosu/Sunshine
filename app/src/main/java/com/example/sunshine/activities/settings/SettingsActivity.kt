@@ -13,6 +13,5 @@ class SettingsActivity : AppCompatActivity() {
         back_image.setOnClickListener {
             finish()
         }
-
     }
 }

@@ -1,18 +1,31 @@
 package com.example.sunshine.activities.settings
 
 import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
+import com.example.sunshine.NewLocation
 import com.example.sunshine.R
+import com.example.sunshine.utils.Pref
+import com.example.sunshine.utils.SunshinePreferences
 import com.example.sunshine.utils.SunshineSyncUtils
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreatePreferences(p0: Bundle?, p1: String?) {
         addPreferencesFromResource(R.xml.pref_settings)
+        setPrefs()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setPrefs()
+    }
+
+    private fun setPrefs() {
         val prefScreen = preferenceScreen
         val sharedPreferences = prefScreen.sharedPreferences
         val count = prefScreen.preferenceCount
@@ -26,11 +39,17 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val activity: Activity = this.activity!!
-        if (key.equals(getString(R.string.pref_location_key))) {
-            SunshineSyncUtils.startImmediateSync(activity)
-        }
         val preference = findPreference(key)
+
         if (preference != null) {
+            if (key.equals(getString(R.string.pref_location_key))) {
+                if (sharedPreferences!!.getString(preference.key, "") == "current_location") {
+                    SunshineSyncUtils.startImmediateSync(activity)
+                } else if (sharedPreferences.getString(preference.key, "") == "other_location") {
+                    val intent = Intent(context, NewLocation::class.java)
+                    startActivity(intent)
+                }
+            }
             val value = sharedPreferences!!.getString(preference.key, "")
             setPreferenceSummary(preference, value!!)
         }
@@ -38,11 +57,16 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun setPreferenceSummary(preference: Preference, value: String) {
         if (preference is ListPreference) {
-            val listPreference: ListPreference = preference
-            val prefIndex = listPreference.findIndexOfValue(value)
-            if (prefIndex >= 0) {
-                listPreference.summary = listPreference.entries[prefIndex]
+            if (value == "other_location") {
+                preference.summary = SunshinePreferences.getPreferredWeatherLocation(context!!)
+            } else {
+                val listPreference: ListPreference = preference
+                val prefIndex = listPreference.findIndexOfValue(value)
+                if (prefIndex >= 0) {
+                    listPreference.summary = listPreference.entries[prefIndex]
+                }
             }
+
         } else if (preference is EditTextPreference) {
             preference.summary = value
         }

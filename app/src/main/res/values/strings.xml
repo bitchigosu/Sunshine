@@ -14,4 +14,7 @@
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
     <string name="wind">Wind</string>
+    <string name="enter_city_name">Enter city name</string>
+    <string name="other_location">other_location</string>
+    <string name="current_location">Current location</string>
 </resources>

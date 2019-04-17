@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 class SunshineSyncUtils {
     companion object {
-        private val SYNC_INTERVAL_HOURS = 3
+        private const val SYNC_INTERVAL_HOURS = 3
         private val SYNC_INTERVAL_SECONDS = TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS.toLong()).toInt()
         private val SYNC_FLEXTIME_SECONDS = SYNC_INTERVAL_SECONDS / 3
         private var sInitialized: Boolean = false

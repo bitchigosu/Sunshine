@@ -5,11 +5,12 @@ import com.example.sunshine.R
 
 class SunshinePreferences {
     companion object {
-        fun getPreferredWeatherLocation(context: Context): String =
-            Pref.getString(
+
+        fun getPreferredWeatherLocation(context: Context): String = if (Pref.getString(
                 context.getString(R.string.pref_location_key),
                 ""
-            )
+            ) == context.getString(R.string.other_location)
+        ) Pref.getString("City", "") else context.getString(R.string.current_location)
 
         fun getPreferredWeatherUnits(context: Context): String =
             Pref.getString(
@@ -35,7 +36,7 @@ class SunshinePreferences {
 
         fun saveLastNotificationTime(context: Context, timeOfNotification: Long) {
             val lastNotificationKey = context.getString(R.string.pref_last_notification)
-            Pref.setLong(lastNotificationKey,timeOfNotification)
+            Pref.setLong(lastNotificationKey, timeOfNotification)
         }
     }
 }

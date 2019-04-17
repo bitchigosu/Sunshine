@@ -40,10 +40,21 @@ class WeatherRepository {
         val client = OkHttpClient()
         val context = SuperApplication.getContext()
 
-        getLocation{
-            val latitude = it.latitude
-            val longitude = it.longitude
-            makeRequest(context = context, client = client, latitude = latitude, longitude = longitude)
+        if (SunshinePreferences.getPreferredWeatherLocation(context)
+            == context.getString(R.string.current_location)
+        ) {
+            getLocation {
+                val latitude = it.latitude
+                val longitude = it.longitude
+                makeRequest(
+                    context = context,
+                    client = client,
+                    latitude = latitude,
+                    longitude = longitude
+                )
+            }
+        } else {
+            getLocationGeocode(context, client, Pref.getString("City", ""))
         }
         notifications()
         mAllWeather = mWeatherDao.getAllWeather()
@@ -80,6 +91,36 @@ class WeatherRepository {
             override fun onFailure(call: Call, e: IOException) {
             }
         })
+    }
+
+    private fun getLocationGeocode(context: Context, client: OkHttpClient, placeName: String): DoubleArray {
+        var latlng = DoubleArray(2)
+        val httpUrl =
+            HttpUrl.parse("https://api.opencagedata.com/geocode/v1/json?q=$placeName&key=ee53b979dd30468aaeeb7e5d252625cd")
+
+        val request = Request.Builder()
+            .url(httpUrl!!)
+            .build()
+        Log.d(TAG, "getWeatherData: $request")
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val jsonString = response.body()!!.string()
+                Log.d(TAG, "onResponse: $jsonString")
+                latlng = JsonUtil.getGeocode(jsonString)
+                makeRequest(
+                    context = context,
+                    client = client,
+                    latitude = latlng[0],
+                    longitude = latlng[1]
+                )
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+            }
+        })
+
+        return latlng
     }
 
     private fun notifications() {
@@ -128,7 +169,11 @@ class WeatherRepository {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
         mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            completion(it)
+            if (it != null) {
+                completion(it)
+            }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Cannot get current coordinates", Toast.LENGTH_LONG).show()
         }
     }
 

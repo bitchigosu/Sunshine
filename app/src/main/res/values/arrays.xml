@@ -9,4 +9,12 @@
         <item>si</item>
         <item>us</item>
     </array>
+    <array name="pref_location_labels">
+        <item>Current location</item>
+        <item>Choose another location</item>
+    </array>
+    <array name="pref_location_values">
+        <item>current_location</item>
+        <item>other_location</item>
+    </array>
 </resources>
