@@ -12,10 +12,10 @@ class SunshinePreferences {
             ) == context.getString(R.string.other_location)
         ) Pref.getString("City", "") else context.getString(R.string.current_location)
 
-        fun getPreferredWeatherUnits(context: Context): String =
-            Pref.getString(
+        fun getPreferredWeatherUnits(context: Context) =
+            Pref.getBoolean(
                 context.getString(R.string.pref_units_key),
-                "si"
+                true
             )
 
         fun areNotificationsEnabled(context: Context): Boolean {

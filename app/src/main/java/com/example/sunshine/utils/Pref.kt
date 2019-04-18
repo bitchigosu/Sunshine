@@ -40,7 +40,7 @@ class Pref {
 
         fun getBoolean(pref: String, def: Boolean): Boolean {
             initializePrefs()
-            return (Companion::prefs.isInitialized) and (prefs.getBoolean(pref, def))
+            return prefs.getBoolean(pref, def)
         }
 
         fun setBoolean(pref: String, lng: Boolean): Boolean {

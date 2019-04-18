@@ -44,8 +44,9 @@ class DetailActivity : AppCompatActivity() {
                 weather_description_text.text = data.getWeatherDesc()
                 max_temp_text.text = data.getMaxTemp().toString() + getString(R.string.temp_symbol)
                 min_temp_text.text = data.getMinTemp().toString() + getString(R.string.temp_symbol)
-                pressure_value.text = data.getPressure().toString()
-                wind_value.text = data.getWindSpeed().toString()
+                pressure_value.text = data.getPressure().toString() + " " + getString(R.string.hpa)
+                wind_value.text = data.getWindSpeed().toString() + " " + getString(R.string.kph)
+                humidity_value.text = data.getHumidity().toString() + getString(R.string.percentage_symbol)
             }
         }
     }

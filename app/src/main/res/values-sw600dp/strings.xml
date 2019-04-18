@@ -5,4 +5,9 @@
     <string name="cannot_get_current_coordinates">Cannot get current coordinates</string>
     <string name="new_weather_available">New weather available</string>
     <string name="temp_symbol">°</string>
+    <string name="percentage_symbol">%</string>
+    <string name="hpa">hPa</string>
+    <string name="kph">kph</string>
+    <string name="celsius">Celsius</string>
+    <string name="fahrenheit">Fahrenheit</string>
 </resources>

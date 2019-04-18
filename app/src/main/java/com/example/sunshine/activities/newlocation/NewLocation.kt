@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.sunshine.R
 import com.example.sunshine.utils.Pref
+import com.example.sunshine.utils.SunshineSyncUtils
 import kotlinx.android.synthetic.main.activity_new_location.*
 
 class NewLocation : AppCompatActivity() {
@@ -15,10 +16,10 @@ class NewLocation : AppCompatActivity() {
         back_image.setOnClickListener { finish() }
         confirm_image.setOnClickListener {
             val text = new_city_edit_text.text.trim().toString()
-            if (text != "")
-                Pref.setString(
-                    "City"
-                    ,text)
+            if (text != "") {
+                Pref.setString("City", text)
+            }
+            SunshineSyncUtils.startImmediateSync(this)
             finish()
         }
     }

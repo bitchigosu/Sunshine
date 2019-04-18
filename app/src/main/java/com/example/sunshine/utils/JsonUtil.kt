@@ -59,10 +59,12 @@ class JsonUtil {
                 var tempLow = dayForecast.getDouble("temperatureLow").toInt()
                 val pressure = dayForecast.getDouble("pressure")
                 val windSpeed = dayForecast.getDouble("windSpeed")
+                var humidity = dayForecast.getDouble("humidity")
+                humidity *= 100
                 val icon = dayForecast.getString("icon")
                 val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(startDay + DAY_IN_MILLIS * i)
 
-                if (SunshinePreferences.getPreferredWeatherUnits(context) == "si") {
+                if (SunshinePreferences.getPreferredWeatherUnits(context)) {
                     tempHigh = convertTemperature(tempHigh)
                     tempLow = convertTemperature(tempLow)
                 }
@@ -70,7 +72,7 @@ class JsonUtil {
                     WeatherEntry(
                         id = i, city = cityName, date = date,
                         weatherDesc = weatherDesc, maxTemp = tempHigh, minTemp = tempLow,
-                        pressure = pressure, windSpeed = windSpeed, iconId = icon
+                        pressure = pressure, windSpeed = windSpeed, humidity = humidity.toInt(), iconId = icon
                     )
                 )
             }

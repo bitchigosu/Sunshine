@@ -7,10 +7,10 @@
             android:entries="@array/pref_location_labels"
             android:entryValues="@array/pref_location_values"/>
 
-    <ListPreference
-            android:defaultValue="si"
-            android:entries="@array/pref_units_labels"
-            android:entryValues="@array/pref_units_values"
+    <SwitchPreference
+            android:checked="true"
+            android:summaryOn="@string/celsius"
+            android:summaryOff="@string/fahrenheit"
             android:key="@string/pref_units_key"
             android:title="@string/units_label"/>
 

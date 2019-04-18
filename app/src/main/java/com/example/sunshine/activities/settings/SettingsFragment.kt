@@ -8,15 +8,18 @@ import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
-import com.example.sunshine.activities.newlocation.NewLocation
 import com.example.sunshine.R
+import com.example.sunshine.SuperApplication
+import com.example.sunshine.activities.newlocation.NewLocation
 import com.example.sunshine.utils.SunshinePreferences
 import com.example.sunshine.utils.SunshineSyncUtils
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+    private val TAG = "SettingsFragment"
+    private val con = SuperApplication.getContext()
+
     override fun onCreatePreferences(p0: Bundle?, p1: String?) {
         addPreferencesFromResource(R.xml.pref_settings)
-        setPrefs()
     }
 
     override fun onResume() {
@@ -31,8 +34,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         for (i in 0 until count) {
             val p: Preference = prefScreen.getPreference(i)
-            val value = sharedPreferences.getString(p.key, "")
-            setPreferenceSummary(p, value!!)
+            if (p is android.support.v14.preference.SwitchPreference) {
+                val switchPreference: android.support.v14.preference.SwitchPreference = p
+                //switchPreference.widgetLayoutResource = R.layout.temperature_units_switch
+            } else {
+                val value = sharedPreferences.getString(p.key, "")
+                setPreferenceSummary(p, value!!)
+            }
         }
     }
 
@@ -48,16 +56,21 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     val intent = Intent(context, NewLocation::class.java)
                     startActivity(intent)
                 }
+            } else if (key.equals(getString(R.string.pref_units_key))) {
+                if (preference is android.support.v14.preference.SwitchPreference) {
+                }
             }
-            val value = sharedPreferences!!.getString(preference.key, "")
-            setPreferenceSummary(preference, value!!)
+            if (preference !is android.support.v14.preference.SwitchPreference) {
+                val value = sharedPreferences!!.getString(preference.key, "")
+                setPreferenceSummary(preference, value!!)
+            }
         }
     }
 
     private fun setPreferenceSummary(preference: Preference, value: String) {
         if (preference is ListPreference) {
             if (value == "other_location") {
-                preference.summary = SunshinePreferences.getPreferredWeatherLocation(context!!)
+                preference.summary = SunshinePreferences.getPreferredWeatherLocation(con)
             } else {
                 val listPreference: ListPreference = preference
                 val prefIndex = listPreference.findIndexOfValue(value)

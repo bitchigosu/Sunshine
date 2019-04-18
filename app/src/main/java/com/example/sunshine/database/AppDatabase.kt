@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 
-@Database(entities = [WeatherEntry::class], version = 6, exportSchema = false)
+@Database(entities = [WeatherEntry::class], version = 7, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
         private const val TAG = "AppDatabase"

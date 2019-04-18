@@ -14,28 +14,9 @@ class WeatherEntry(
     private var minTemp: Int,
     private var windSpeed: Double,
     private var pressure: Double,
+    private var humidity: Int,
     private var iconId: String
 ) {
-
-/*    @Ignore
-    constructor(
-        city: String,
-        date: String,
-        weatherDesc: String,
-        maxTemp: Double,
-        minTemp: Double,
-        windSpeed: Double,
-        pressure: Double
-    ) : this(
-        id = -1,
-        city = city,
-        date = date,
-        weatherDesc = weatherDesc,
-        maxTemp = maxTemp,
-        minTemp = minTemp,
-        windSpeed = windSpeed,
-        pressure = pressure
-    )*/
 
     fun getId(): Int? = id
     fun setId(id: Int) {
@@ -76,6 +57,12 @@ class WeatherEntry(
     fun setDate(date: String) {
         this.date = date
     }
+
+    fun getHumidity(): Int = humidity
+    fun setHumidity(humidity: Int) {
+        this.humidity = humidity
+    }
+
 
     fun getIconId(): String = iconId
     fun setIconId(iconId: String) {
