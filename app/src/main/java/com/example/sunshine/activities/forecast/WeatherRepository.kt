@@ -167,7 +167,9 @@ class WeatherRepository {
             .setFastestInterval(1500000)
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
+        MainActivity.getWeakActivity().get()!!.runOnUiThread {
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
+        }
         mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
             if (it != null) {
                 completion(it)

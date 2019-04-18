@@ -6,7 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/touch_selector"
-        android:minHeight="?android:attr/listPreferredItemHeight"
         android:paddingBottom="@dimen/forecast_detail_vertical_padding"
         android:paddingTop="@dimen/forecast_detail_vertical_padding"
         android:paddingRight="@dimen/forecast_detail_horizontal_padding"
