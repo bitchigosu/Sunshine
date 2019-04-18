@@ -1,4 +1,4 @@
-package com.example.sunshine.activities.forecast
+package com.example.sunshine.activities.forecast.data
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel

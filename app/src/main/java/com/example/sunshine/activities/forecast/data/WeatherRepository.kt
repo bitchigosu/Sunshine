@@ -1,27 +1,18 @@
-package com.example.sunshine.activities.forecast
+package com.example.sunshine.activities.forecast.data
 
 import android.app.Activity
-import android.app.PendingIntent
 import android.arch.lifecycle.LiveData
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.AsyncTask
-import android.support.v4.app.*
-import android.text.format.DateUtils
-import android.util.Log
+import android.support.v4.app.ActivityCompat
 import android.widget.Toast
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
-import com.example.sunshine.activities.detail.DetailActivity
+import com.example.sunshine.activities.forecast.MainActivity
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
-
 import com.google.android.gms.location.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import java.io.IOException
 
@@ -30,6 +21,8 @@ class WeatherRepository {
     private lateinit var mLocationRequest: LocationRequest
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var weather: ArrayList<WeatherEntry>
+    private val mClient = OkHttpClient()
+    private val mContext = SuperApplication.getContext()
 
     fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask().execute()
 
@@ -37,52 +30,34 @@ class WeatherRepository {
 
     @Synchronized
     fun getWeatherData(): LiveData<List<WeatherEntry>> {
-        val client = OkHttpClient()
-        val context = SuperApplication.getContext()
-
-        if (SunshinePreferences.getPreferredWeatherLocation(context)
-            == context.getString(R.string.current_location)
+        if (SunshinePreferences.getPreferredWeatherLocation(mContext)
+            == mContext.getString(R.string.current_location)
         ) {
             getLocation {
                 val latitude = it.latitude
                 val longitude = it.longitude
-                makeRequest(
-                    context = context,
-                    client = client,
+                getWeatherInfo(
                     latitude = latitude,
                     longitude = longitude
                 )
             }
         } else {
-            getLocationGeocode(context, client, Pref.getString("City", ""))
+            getLocationGeocode(Pref.getString("City", ""))
         }
         notifications()
         mAllWeather = mWeatherDao.getAllWeather()
         return mAllWeather
     }
 
-    private fun makeRequest(context: Context, client: OkHttpClient, latitude: Double, longitude: Double) {
-        val httpUrl = HttpUrl.Builder()
-            .scheme("https")
-            .host(STATIC_WEATHER_URL)
-            .addPathSegment("forecast")
-            .addPathSegment("dff00a22931b903b6168466d0a34cc2c")
-            .addPathSegment("$latitude,$longitude")
-            .build()
+    private fun getWeatherInfo(latitude: Double, longitude: Double) {
+        val httpUrl = HttpUrl.parse(SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
+                + "$latitude, $longitude")
 
-        val request = Request.Builder()
-            .url(httpUrl)
-            .build()
-        Log.d(TAG, "getWeatherData: $request")
-
-        client.newCall(request).enqueue(object : Callback {
+        mClient.newCall(makeRequest(httpUrl)).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val jsonString = response.body()!!.string()
-                Log.d(TAG, "onResponse: $jsonString")
                 weather = JsonUtil.getSimpleWeatherStringsFromJson(
-                    context
-                    , jsonString
-                )
+                    mContext, jsonString)
                 for (i in 0 until weather.size) {
                     insert(weather[i])
                 }
@@ -93,24 +68,17 @@ class WeatherRepository {
         })
     }
 
-    private fun getLocationGeocode(context: Context, client: OkHttpClient, placeName: String): DoubleArray {
+    private fun getLocationGeocode(placeName: String): DoubleArray {
         var latlng = DoubleArray(2)
+        val newPlaceName = placeName.replace(" ", "+")
         val httpUrl =
-            HttpUrl.parse("https://api.opencagedata.com/geocode/v1/json?q=$placeName&key=ee53b979dd30468aaeeb7e5d252625cd")
+            HttpUrl.parse(SCHEME + GEOCODE_URL + newPlaceName + GEOCODE_API_KEY)
 
-        val request = Request.Builder()
-            .url(httpUrl!!)
-            .build()
-        Log.d(TAG, "getWeatherData: $request")
-
-        client.newCall(request).enqueue(object : Callback {
+        mClient.newCall(makeRequest(httpUrl)).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val jsonString = response.body()!!.string()
-                Log.d(TAG, "onResponse: $jsonString")
-                latlng = JsonUtil.getGeocode(jsonString)
-                makeRequest(
-                    context = context,
-                    client = client,
+                latlng = JsonUtil.getGeocodeFromJson(jsonString)
+                getWeatherInfo(
                     latitude = latlng[0],
                     longitude = latlng[1]
                 )
@@ -121,34 +89,6 @@ class WeatherRepository {
         })
 
         return latlng
-    }
-
-    private fun notifications() {
-        val context = SuperApplication.getContext()
-        val notificationsEnabled = SunshinePreferences.areNotificationsEnabled(context)
-        val timeSinceLastNotification = SunshinePreferences.getElapsedTimeSinceLastNotification(context)
-        var oneDayPassedSinceLastNotification = false
-        if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
-            oneDayPassedSinceLastNotification = true
-        }
-
-        if (notificationsEnabled and oneDayPassedSinceLastNotification) {
-            val notificationBuilder = NotificationCompat.Builder(context, "1")
-                .setSmallIcon(R.drawable.notify_panel_notification_icon_bg)
-                .setContentTitle("Sunshine")
-                .setContentText("New weather available")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-            val detailIntentForToday = Intent(context, DetailActivity::class.java)
-            val taskStackBuilder = TaskStackBuilder.create(context)
-            taskStackBuilder.addNextIntentWithParentStack(detailIntentForToday)
-            val resultIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-            notificationBuilder.setContentIntent(resultIntent)
-            with(NotificationManagerCompat.from(context)) {
-                notify(3004, notificationBuilder.build())
-            }
-            SunshinePreferences.saveLastNotificationTime(context, System.currentTimeMillis())
-        }
     }
 
     private fun getLocation(completion: (Location) -> Unit) {
@@ -175,10 +115,13 @@ class WeatherRepository {
                 completion(it)
             }
         }.addOnFailureListener {
-            Toast.makeText(context, "Cannot get current coordinates", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.cannot_get_current_coordinates), Toast.LENGTH_LONG).show()
         }
     }
 
+    private fun makeRequest(url: HttpUrl?) : Request = Request.Builder()
+        .url(url!!)
+        .build()
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult?) {
@@ -190,7 +133,14 @@ class WeatherRepository {
 
     companion object {
         private const val TAG = "WeatherRepository"
-        private const val STATIC_WEATHER_URL = "api.darksky.net"
+        private const val SCHEME = "https://"
+        private const val WEATHER_INFO_API_KEY = "dff00a22931b903b6168466d0a34cc2c/"
+        private const val WEATHER_INFO_URL = "api.darksky.net/forecast/"
+
+
+        private const val GEOCODE_URL = "api.opencagedata.com/geocode/v1/json?q="
+        private const val GEOCODE_API_KEY = "&key=ee53b979dd30468aaeeb7e5d252625cd"
+
 
         private class InsertAsyncTask : AsyncTask<WeatherEntry, Unit, Unit>() {
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {

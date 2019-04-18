@@ -4,12 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import com.example.sunshine.R
 import com.example.sunshine.activities.settings.SettingsActivity
-import com.example.sunshine.utils.mWeatherDao
 import com.example.sunshine.utils.JsonUtil
+import com.example.sunshine.utils.mWeatherDao
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.extra_weather_detail.*
 import kotlinx.android.synthetic.main.primary_weather_info.*
@@ -44,8 +42,8 @@ class DetailActivity : AppCompatActivity() {
                 )
                 day_text.text = data.getDate()
                 weather_description_text.text = data.getWeatherDesc()
-                max_temp_text.text = data.getMaxTemp().toString() + "°"
-                min_temp_text.text = data.getMinTemp().toString() + "°"
+                max_temp_text.text = data.getMaxTemp().toString() + getString(R.string.temp_symbol)
+                min_temp_text.text = data.getMinTemp().toString() + getString(R.string.temp_symbol)
                 pressure_value.text = data.getPressure().toString()
                 wind_value.text = data.getWindSpeed().toString()
             }

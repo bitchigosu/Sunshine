@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
+import com.example.sunshine.activities.forecast.data.WeatherViewModel
 import com.example.sunshine.activities.settings.SettingsActivity
 
 import com.example.sunshine.utils.Pref
@@ -64,7 +65,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
             getString(R.string.pref_location_key) -> {
-
             }
             getString(R.string.pref_units_key) -> {
                 mViewModel.clear()

@@ -1,7 +1,8 @@
-package com.example.sunshine
+package com.example.sunshine.activities.newlocation
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.sunshine.R
 import com.example.sunshine.utils.Pref
 import kotlinx.android.synthetic.main.activity_new_location.*
 
@@ -17,8 +18,7 @@ class NewLocation : AppCompatActivity() {
             if (text != "")
                 Pref.setString(
                     "City"
-                    , new_city_edit_text.text.toString()
-                )
+                    ,text)
             finish()
         }
     }

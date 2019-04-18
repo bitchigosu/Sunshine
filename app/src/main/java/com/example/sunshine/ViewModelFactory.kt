@@ -2,8 +2,8 @@ package com.example.sunshine
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.example.sunshine.activities.forecast.WeatherRepository
-import com.example.sunshine.activities.forecast.WeatherViewModel
+import com.example.sunshine.activities.forecast.data.WeatherRepository
+import com.example.sunshine.activities.forecast.data.WeatherViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory :ViewModelProvider.Factory {

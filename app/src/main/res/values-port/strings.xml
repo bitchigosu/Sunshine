@@ -2,4 +2,7 @@
 <resources>
     <string name="enter_city_name">Enter city name</string>
     <string name="other_location">other_location</string>
+    <string name="cannot_get_current_coordinates">Cannot get current coordinates</string>
+    <string name="new_weather_available">New weather available</string>
+    <string name="temp_symbol">°</string>
 </resources>

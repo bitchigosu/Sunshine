@@ -8,9 +8,8 @@ import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
-import com.example.sunshine.NewLocation
+import com.example.sunshine.activities.newlocation.NewLocation
 import com.example.sunshine.R
-import com.example.sunshine.utils.Pref
 import com.example.sunshine.utils.SunshinePreferences
 import com.example.sunshine.utils.SunshineSyncUtils
 
