@@ -55,21 +55,12 @@ class WeatherRepository {
             SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
                     + "$latitude, $longitude"
         )
-
-        mClient.newCall(makeRequest(httpUrl)).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val jsonString = response.body()!!.string()
-                weather = JsonUtil.getSimpleWeatherStringsFromJson(
-                    mContext, jsonString
-                )
-                for (i in 0 until weather.size) {
-                    insert(weather[i])
-                }
+        mClient.makeNewCall(httpUrl) {
+            weather = JsonUtil.getSimpleWeatherStringsFromJson(mContext, it)
+            for (i in 0 until weather.size) {
+                insert(weather[i])
             }
-
-            override fun onFailure(call: Call, e: IOException) {
-            }
-        })
+        }
     }
 
     private fun getLocationGeocode(placeName: String): DoubleArray {
@@ -78,21 +69,14 @@ class WeatherRepository {
         val httpUrl =
             HttpUrl.parse(SCHEME + GEOCODE_URL + newPlaceName + GEOCODE_API_KEY)
 
-        mClient.newCall(makeRequest(httpUrl)).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val jsonString = response.body()!!.string()
-                latlng = JsonUtil.getGeocodeFromJson(jsonString)
-                getWeatherInfo(
-                    latitude = latlng[0],
-                    longitude = latlng[1]
-                )
-                Log.d(TAG, "onResponse: ${latlng[0]} ${latlng[1]}")
-            }
-
-            override fun onFailure(call: Call, e: IOException) {
-            }
-        })
-
+        mClient.makeNewCall(httpUrl) {
+            latlng = JsonUtil.getGeocodeFromJson(it)
+            getWeatherInfo(
+                latitude = latlng[0],
+                longitude = latlng[1]
+            )
+            Log.d(TAG, "onResponse: ${latlng[0]} ${latlng[1]}")
+        }
         return latlng
     }
 
@@ -125,9 +109,6 @@ class WeatherRepository {
         }
     }
 
-    private fun makeRequest(url: HttpUrl?): Request = Request.Builder()
-        .url(url!!)
-        .build()
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult?) {
@@ -136,6 +117,24 @@ class WeatherRepository {
             }
         }
     }
+
+    private fun OkHttpClient.makeNewCall(url: HttpUrl?, f: (jsonString: String) -> Unit) {
+        newCall(makeRequest(url)).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val jsonString = response.body()!!.string()
+                f(jsonString)
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                Log.d(TAG, "onFailure: ${e.message}")
+            }
+
+        })
+    }
+
+    private fun makeRequest(url: HttpUrl?): Request = Request.Builder()
+        .url(url!!)
+        .build()
 
     companion object {
         private const val TAG = "WeatherRepository"
