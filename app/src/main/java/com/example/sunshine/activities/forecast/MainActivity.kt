@@ -20,7 +20,6 @@ import java.lang.ref.WeakReference
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val TAG = "MainActivity"
     private lateinit var mViewModel: WeatherViewModel
     private lateinit var mAdapter: WeatherAdapter
 
@@ -36,6 +35,18 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             onClickFun(position)
         }
 
+        refresh_image.setOnClickListener {
+            mViewModel.clear()
+        }
+        settings_image.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
+        icon_image.setOnClickListener {
+            recyclerView.smoothScrollToPosition(0)
+        }
+
         recyclerView.adapter = mAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
@@ -47,14 +58,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         mViewModel.getNewWeather().observe(this, Observer {
             mAdapter.updateData(it!!)
         })
-
-        refresh_image.setOnClickListener {
-            mViewModel.clear()
-        }
-        settings_image.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     override fun onDestroy() {
@@ -79,6 +82,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     companion object {
+        const val TAG = "MainActivity"
         private lateinit var weakActivity: WeakReference<MainActivity>
         fun getWeakActivity() = weakActivity
     }
