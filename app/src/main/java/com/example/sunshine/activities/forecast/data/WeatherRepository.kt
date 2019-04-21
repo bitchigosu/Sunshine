@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.AsyncTask
 import android.support.v4.app.ActivityCompat
+import android.util.Log
 import android.widget.Toast
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
@@ -50,14 +51,17 @@ class WeatherRepository {
     }
 
     private fun getWeatherInfo(latitude: Double, longitude: Double) {
-        val httpUrl = HttpUrl.parse(SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
-                + "$latitude, $longitude")
+        val httpUrl = HttpUrl.parse(
+            SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
+                    + "$latitude, $longitude"
+        )
 
         mClient.newCall(makeRequest(httpUrl)).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val jsonString = response.body()!!.string()
                 weather = JsonUtil.getSimpleWeatherStringsFromJson(
-                    mContext, jsonString)
+                    mContext, jsonString
+                )
                 for (i in 0 until weather.size) {
                     insert(weather[i])
                 }
@@ -82,6 +86,7 @@ class WeatherRepository {
                     latitude = latlng[0],
                     longitude = latlng[1]
                 )
+                Log.d(TAG, "onResponse: ${latlng[0]} ${latlng[1]}")
             }
 
             override fun onFailure(call: Call, e: IOException) {
@@ -115,11 +120,12 @@ class WeatherRepository {
                 completion(it)
             }
         }.addOnFailureListener {
-            Toast.makeText(context, context.getString(R.string.cannot_get_current_coordinates), Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.cannot_get_current_coordinates), Toast.LENGTH_LONG)
+                .show()
         }
     }
 
-    private fun makeRequest(url: HttpUrl?) : Request = Request.Builder()
+    private fun makeRequest(url: HttpUrl?): Request = Request.Builder()
         .url(url!!)
         .build()
 

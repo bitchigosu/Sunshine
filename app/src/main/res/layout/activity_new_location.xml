@@ -23,10 +23,10 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
-            <EditText
+            <AutoCompleteTextView
                     android:id="@+id/new_city_edit_text"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/toolbar_height"
+                    android:layout_height="wrap_content"
                     android:textColor="#FFF"
                     android:hint="@string/enter_city_name"
                     app:layout_constraintStart_toEndOf="@id/back_image"

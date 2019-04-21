@@ -3,6 +3,8 @@ package com.example.sunshine.utils
 import android.content.Context
 import com.example.sunshine.R
 import com.example.sunshine.database.WeatherEntry
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.HttpURLConnection
@@ -91,6 +93,19 @@ class JsonUtil {
             array[0] = lat
             array[1] = lng
             return array
+        }
+
+        @Throws(JSONException::class)
+        fun getCitiesFromJson(json: String): Task<ArrayList<String>> {
+            val list = ArrayList<String>()
+            val decode = JSONObject(json)
+            val results = decode.getJSONArray("results")
+            if (results.length() != 0) {
+                for (i in 0 until results.length()) {
+                    list.add(results.getJSONObject(i).getString("formatted"))
+                }
+            }
+            return Tasks.forResult(list)
         }
 
         private fun convertTemperature(temp: Int): Int = ((temp - 32) * 5 / 9)
