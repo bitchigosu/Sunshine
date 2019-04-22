@@ -25,13 +25,6 @@
                     android:src="@drawable/art_light_clouds"/>
 
             <ImageView
-                    android:id="@+id/refresh_image"
-                    style="@style/icon"
-                    android:src="@drawable/ic_refresh"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/settings_image"/>
-            <ImageView
                     android:id="@+id/settings_image"
                     style="@style/icon"
                     android:src="@drawable/ic_settings"
@@ -42,14 +35,20 @@
 
     </android.support.v7.widget.Toolbar>
 
-
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:clipToPadding="false"
-            android:paddingBottom="8dp"
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>

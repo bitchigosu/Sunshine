@@ -35,12 +35,16 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             onClickFun(position)
         }
 
-        refresh_image.setOnClickListener {
-            mViewModel.clear()
-        }
         settings_image.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
+        }
+
+        swipeRefresh.setColorSchemeResources(R.color.refresh_progress_1,
+            R.color.refresh_progress_2, R.color.refresh_progress_3)
+        swipeRefresh.setOnRefreshListener {
+            mViewModel.getNewWeather()
+            swipeRefresh.isRefreshing = false
         }
 
         icon_image.setOnClickListener {
@@ -70,7 +74,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             getString(R.string.pref_location_key) -> {
             }
             getString(R.string.pref_units_key) -> {
-                mViewModel.clear()
+                mViewModel.getNewWeather()
             }
         }
     }

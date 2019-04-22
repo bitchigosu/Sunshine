@@ -10,4 +10,8 @@
     <color name="detail_accent_pane_background">#455A64</color>
     <color name="detail_accent_label">#90A4AE</color>
     <color name="activated">#E0E0E0</color>
+
+    <color name="refresh_progress_1">@color/colorPrimaryDark</color>
+    <color name="refresh_progress_2">@color/colorAccent</color>
+    <color name="refresh_progress_3">@color/colorPrimary</color>
 </resources>
