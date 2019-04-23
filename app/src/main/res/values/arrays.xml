@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <array name="pref_units_values">
-        <item>si</item>
-        <item>us</item>
-    </array>
     <array name="pref_location_labels">
         <item>Current location</item>
         <item>Choose another location</item>

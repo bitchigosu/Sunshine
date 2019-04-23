@@ -9,16 +9,14 @@ import com.example.sunshine.activities.newlocation.NewLocationRepository
 import com.example.sunshine.activities.newlocation.NewLocationViewModel
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory :ViewModelProvider.Factory {
+class ViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(WeatherViewModel::class.java))
-            WeatherViewModel(WeatherRepository()) as T
-        else if (modelClass.isAssignableFrom(DetailViewModel::class.java))
-            DetailViewModel() as T
-        else if (modelClass.isAssignableFrom(NewLocationViewModel::class.java))
-            NewLocationViewModel(NewLocationRepository()) as T
-        else
-            error("Unknown View Model class $modelClass")
+        return when {
+            modelClass.isAssignableFrom(WeatherViewModel::class.java) -> WeatherViewModel(WeatherRepository()) as T
+            modelClass.isAssignableFrom(DetailViewModel::class.java) -> DetailViewModel() as T
+            modelClass.isAssignableFrom(NewLocationViewModel::class.java) -> NewLocationViewModel(NewLocationRepository()) as T
+            else -> error("Unknown View Model class $modelClass")
+        }
     }
 }
