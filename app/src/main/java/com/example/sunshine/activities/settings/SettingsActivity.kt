@@ -1,7 +1,7 @@
 package com.example.sunshine.activities.settings
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.sunshine.R
 import kotlinx.android.synthetic.main.activity_settings.*
 

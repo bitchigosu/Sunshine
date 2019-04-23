@@ -1,8 +1,8 @@
 package com.example.sunshine.activities.newlocation
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
 class NewLocationViewModel(private val newLocationRepo: NewLocationRepository) : ViewModel() {
     private val _cities = MutableLiveData<List<String>>()
@@ -13,5 +13,4 @@ class NewLocationViewModel(private val newLocationRepo: NewLocationRepository) :
             _cities.value = it
         }
     }
-
 }

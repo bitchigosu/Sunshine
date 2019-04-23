@@ -2,14 +2,17 @@ package com.example.sunshine.utils
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
-import android.support.v4.app.TaskStackBuilder
 import android.text.format.DateUtils
+import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.TaskStackBuilder
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.database.AppDatabase
+import okhttp3.*
+import java.io.IOException
 
 val db = AppDatabase.getInstance(SuperApplication.getContext())
 val mWeatherDao = db!!.weatherDao()
@@ -42,3 +45,20 @@ fun notifications() {
         SunshinePreferences.saveLastNotificationTime(context, System.currentTimeMillis())
     }
 }
+
+fun OkHttpClient.makeNewCall(url: HttpUrl?, f: (jsonString: String) -> Unit) {
+    newCall(makeRequest(url)).enqueue(object : Callback {
+        override fun onResponse(call: Call, response: Response) {
+            val jsonString = response.body()!!.string()
+            f(jsonString)
+        }
+
+        override fun onFailure(call: Call, e: IOException) {
+            Log.d("CommonStaticTAG", "onFailure: ${e.message}")
+        }
+
+    })
+}
+private fun makeRequest(url: HttpUrl?): Request = Request.Builder()
+    .url(url!!)
+    .build()

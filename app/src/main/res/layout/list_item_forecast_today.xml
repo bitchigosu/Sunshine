@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -9,7 +9,7 @@
         android:paddingBottom="@dimen/forecast_detail_vertical_padding"
         android:paddingTop="@dimen/forecast_detail_vertical_padding">
 
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontal_middle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,6 +26,7 @@
             android:fontFamily="sans-serif"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/forecast_icon"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -36,25 +37,24 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/horizontal_middle"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/day_text"
             tools:src="@drawable/art_clouds"/>
 
     <TextView
             android:id="@+id/weather_description_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxWidth="150dp"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
             android:textSize="20sp"
             android:textColor="@color/white"
             app:layout_constraintHorizontal_bias="0.52"
-            app:layout_constraintLeft_toLeftOf="@+id/forecast_icon"
-            app:layout_constraintRight_toRightOf="@+id/forecast_icon"
             app:layout_constraintTop_toBottomOf="@+id/forecast_icon"
-            tools:text="Mostly cloudy until evening and breezy in the afternoon."/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/horizontal_middle"
+            tools:text="Mostly cloudy throughout the day and breezy starting in the afternoon, continuing until evening."/>
 
     <TextView
             android:id="@+id/max_temp_text"
@@ -82,4 +82,4 @@
             app:layout_constraintRight_toRightOf="@+id/max_temp_text"
             tools:text="10\u00b0"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

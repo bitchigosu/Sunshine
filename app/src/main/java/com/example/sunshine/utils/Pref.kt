@@ -1,7 +1,7 @@
 package com.example.sunshine.utils
 
 import android.content.SharedPreferences
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.example.sunshine.SuperApplication
 
 class Pref {

@@ -1,8 +1,9 @@
 package com.example.sunshine.activities.newlocation
 
 import com.example.sunshine.utils.JsonUtil
-import okhttp3.*
-import java.io.IOException
+import com.example.sunshine.utils.makeNewCall
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
 
 class NewLocationRepository {
 
@@ -11,20 +12,12 @@ class NewLocationRepository {
         val httpUrl = HttpUrl.parse(SCHEME + GEOCODE_URL + cityName + GEOCODE_API_KEY)
         val client = OkHttpClient()
 
-        client.newCall(makeRequest(httpUrl)).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val jsonResult = response.body()!!.string()
-                JsonUtil.getCitiesFromJson(jsonResult).addOnSuccessListener {
-                    competition(it)
-                }
+        client.makeNewCall(httpUrl) {
+            JsonUtil.getCitiesFromJson(it).addOnSuccessListener {
+                competition(it)
             }
-            override fun onFailure(call: Call, e: IOException) {}
-        })
+        }
     }
-
-    private fun makeRequest(url: HttpUrl?): Request = Request.Builder()
-        .url(url!!)
-        .build()
 
     companion object {
         private const val SCHEME = "https://"

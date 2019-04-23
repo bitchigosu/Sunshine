@@ -7,23 +7,23 @@ import android.widget.Filterable
 
 
 open class AutoSuggestAdapter(context: Context, resource: Int) : ArrayAdapter<String>(context, resource), Filterable{
-    private val mlistData: MutableList<String>
+    private val mListData: MutableList<String>
 
     init {
-        mlistData = ArrayList()
+        mListData = ArrayList()
     }
 
     fun setData(list: List<String>) {
-        mlistData.clear()
-        mlistData.addAll(list)
+        mListData.clear()
+        mListData.addAll(list)
     }
 
     override fun getCount(): Int {
-        return mlistData.size
+        return mListData.size
     }
 
     override fun getItem(position: Int): String? {
-        return mlistData[position]
+        return mListData[position]
     }
 
     /**
@@ -33,7 +33,7 @@ open class AutoSuggestAdapter(context: Context, resource: Int) : ArrayAdapter<St
      * @return
      */
     fun getObject(position: Int): String {
-        return mlistData[position]
+        return mListData[position]
     }
 
     override fun getFilter(): Filter {
@@ -41,8 +41,8 @@ open class AutoSuggestAdapter(context: Context, resource: Int) : ArrayAdapter<St
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val filterResults = FilterResults()
                 if (constraint != null) {
-                    filterResults.values = mlistData
-                    filterResults.count = mlistData.size
+                    filterResults.values = mListData
+                    filterResults.count = mListData.size
                 }
                 return filterResults
             }

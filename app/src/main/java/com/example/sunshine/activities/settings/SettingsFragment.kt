@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.preference.EditTextPreference
-import android.support.v7.preference.ListPreference
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.newlocation.NewLocation
@@ -34,8 +34,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
         for (i in 0 until count) {
             val p: Preference = prefScreen.getPreference(i)
-            if (p is android.support.v14.preference.SwitchPreference) {
-                val switchPreference: android.support.v14.preference.SwitchPreference = p
+            if (p is androidx.preference.SwitchPreference) {
+                val switchPreference: androidx.preference.SwitchPreference = p
                 //switchPreference.widgetLayoutResource = R.layout.temperature_units_switch
             } else {
                 val value = sharedPreferences.getString(p.key, "")
@@ -57,10 +57,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     startActivity(intent)
                 }
             } else if (key.equals(getString(R.string.pref_units_key))) {
-                if (preference is android.support.v14.preference.SwitchPreference) {
+                if (preference is androidx.preference.SwitchPreference) {
                 }
             }
-            if (preference !is android.support.v14.preference.SwitchPreference) {
+            if (preference !is androidx.preference.SwitchPreference) {
                 val value = sharedPreferences!!.getString(preference.key, "")
                 setPreferenceSummary(preference, value!!)
             }

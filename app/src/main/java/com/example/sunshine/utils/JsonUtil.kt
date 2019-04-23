@@ -35,9 +35,8 @@ class JsonUtil {
 
             /* Is there an error? */
             if (forecastJson.has(OWM_MESSAGE_CODE)) {
-                val errorCode = forecastJson.getInt(OWM_MESSAGE_CODE)
 
-                when (errorCode) {
+                when (forecastJson.getInt(OWM_MESSAGE_CODE)) {
                     HttpURLConnection.HTTP_OK -> {
                     }
                     HttpURLConnection.HTTP_NOT_FOUND ->

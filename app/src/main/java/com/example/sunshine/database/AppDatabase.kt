@@ -1,8 +1,8 @@
 package com.example.sunshine.database
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import android.content.Context
 
 @Database(entities = [WeatherEntry::class], version = 7, exportSchema = false)
@@ -19,7 +19,7 @@ abstract class AppDatabase : RoomDatabase() {
                     sInstance = Room.databaseBuilder(
                         context.applicationContext,
                         AppDatabase::class.java,
-                        AppDatabase.DATABASE_NAME
+                        DATABASE_NAME
                     )
                         .fallbackToDestructiveMigration()
                         .build()

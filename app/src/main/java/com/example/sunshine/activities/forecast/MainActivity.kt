@@ -1,12 +1,11 @@
 package com.example.sunshine.activities.forecast
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
 
         recyclerView.adapter = mAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
         mViewModel = ViewModelProviders.of(

@@ -1,7 +1,7 @@
 package com.example.sunshine.database
 
-import android.arch.persistence.room.*
-import android.arch.lifecycle.LiveData
+import androidx.room.*
+import androidx.lifecycle.LiveData
 
 
 @Dao

@@ -1,21 +1,21 @@
 package com.example.sunshine.activities.forecast.data
 
 import android.app.Activity
-import android.arch.lifecycle.LiveData
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.AsyncTask
-import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.LiveData
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.forecast.MainActivity
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
 import com.google.android.gms.location.*
-import okhttp3.*
-import java.io.IOException
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
 
 class WeatherRepository {
 
@@ -25,9 +25,7 @@ class WeatherRepository {
     private val mClient = OkHttpClient()
     private val mContext = SuperApplication.getContext()
 
-    fun clear(): AsyncTask<WeatherEntry, Unit, Unit> = DeleteAsyncTask().execute()
-
-    fun insert(weather: WeatherEntry) = InsertAsyncTask().execute(weather)!!
+    private fun insert(weather: WeatherEntry) = InsertAsyncTask().execute(weather)!!
 
     @Synchronized
     fun getWeatherData(): LiveData<List<WeatherEntry>> {
@@ -118,24 +116,6 @@ class WeatherRepository {
         }
     }
 
-    private fun OkHttpClient.makeNewCall(url: HttpUrl?, f: (jsonString: String) -> Unit) {
-        newCall(makeRequest(url)).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val jsonString = response.body()!!.string()
-                f(jsonString)
-            }
-
-            override fun onFailure(call: Call, e: IOException) {
-                Log.d(TAG, "onFailure: ${e.message}")
-            }
-
-        })
-    }
-
-    private fun makeRequest(url: HttpUrl?): Request = Request.Builder()
-        .url(url!!)
-        .build()
-
     companion object {
         private const val TAG = "WeatherRepository"
         private const val SCHEME = "https://"
@@ -151,18 +131,6 @@ class WeatherRepository {
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {
                 mWeatherDao.insert(params[0]!!)
                 return null
-            }
-        }
-
-        private class DeleteAsyncTask : AsyncTask<WeatherEntry, Unit, Unit>() {
-            private val TAG = "DeleteAsyncTask"
-            override fun doInBackground(vararg params: WeatherEntry?): Unit? {
-                mWeatherDao.deleteAll()
-                return null
-            }
-
-            override fun onPostExecute(result: Unit?) {
-                WeatherRepository().getWeatherData()
             }
         }
     }
