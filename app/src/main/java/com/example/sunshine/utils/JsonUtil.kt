@@ -61,9 +61,15 @@ class JsonUtil {
                 val pressure = dayForecast.getDouble("pressure")
                 val windSpeed = dayForecast.getDouble("windSpeed")
                 var humidity = dayForecast.getDouble("humidity")
+                val uvIndex = dayForecast.getInt("uvIndex")
+                val sunrise = dayForecast.getLong("sunriseTime")
+                val sunset = dayForecast.getLong("sunsetTime")
                 humidity *= 100
                 val icon = dayForecast.getString("icon")
                 val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(startDay + DAY_IN_MILLIS * i)
+                val sunTimeSDF = SimpleDateFormat("hh:mm", Locale.UK)
+                val sunriseTime = sunTimeSDF.format(startDay + sunrise)
+                val sunsetTime = sunTimeSDF.format(sunset)
 
                 if (SunshinePreferences.getPreferredWeatherUnits(context)) {
                     tempHigh = convertTemperature(tempHigh)
@@ -73,7 +79,8 @@ class JsonUtil {
                     WeatherEntry(
                         id = i, city = cityName, date = date,
                         weatherDesc = weatherDesc, maxTemp = tempHigh, minTemp = tempLow,
-                        pressure = pressure, windSpeed = windSpeed, humidity = humidity.toInt(), iconId = icon
+                        pressure = pressure, windSpeed = windSpeed, humidity = humidity.toInt(),sunrise = sunriseTime,
+                        sunset = sunsetTime, uvIndex = uvIndex, iconId = icon
                     )
                 )
             }

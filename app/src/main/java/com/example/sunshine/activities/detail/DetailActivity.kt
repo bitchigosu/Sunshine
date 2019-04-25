@@ -50,6 +50,9 @@ class DetailActivity : AppCompatActivity() {
                     pressure_value.text = data.getPressure().toString() + " " + getString(R.string.hpa)
                     wind_value.text = data.getWindSpeed().toString() + " " + getString(R.string.kph)
                     humidity_value.text = data.getHumidity().toString() + getString(R.string.percentage_symbol)
+                    sunrise_value.text = data.getSunrise()
+                    sunset_value.text = data.getSunset()
+                    uvIndex_value.text = data.getUvIndex().toString()
                 }
             }
         })

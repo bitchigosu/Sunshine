@@ -15,6 +15,9 @@ class WeatherEntry(
     private var windSpeed: Double,
     private var pressure: Double,
     private var humidity: Int,
+    private var uvIndex: Int,
+    private var sunrise: String,
+    private var sunset: String,
     private var iconId: String
 ) {
 
@@ -63,6 +66,20 @@ class WeatherEntry(
         this.humidity = humidity
     }
 
+    fun getUvIndex(): Int = uvIndex
+    fun setUvIndex(uvIndex: Int) {
+        this.uvIndex = uvIndex
+    }
+
+    fun getSunrise(): String = sunrise
+    fun setSunrise(sunrise: String) {
+        this.sunrise = sunrise
+    }
+
+    fun getSunset(): String = sunset
+    fun setSunset(sunset: String) {
+        this.sunset = sunset
+    }
 
     fun getIconId(): String = iconId
     fun setIconId(iconId: String) {

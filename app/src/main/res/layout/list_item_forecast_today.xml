@@ -10,7 +10,7 @@
         android:paddingTop="@dimen/forecast_detail_vertical_padding">
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/horizontal_middle"
+            android:id="@+id/vertical_first_third"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -38,7 +38,7 @@
             android:layout_height="96dp"
             android:adjustViewBounds="true"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/horizontal_middle"
+            app:layout_constraintRight_toLeftOf="@+id/vertical_first_third"
             app:layout_constraintTop_toBottomOf="@id/day_text"
             tools:src="@drawable/art_clouds"/>
 
@@ -53,7 +53,7 @@
             app:layout_constraintHorizontal_bias="0.52"
             app:layout_constraintTop_toBottomOf="@+id/forecast_icon"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/horizontal_middle"
+            app:layout_constraintEnd_toStartOf="@id/vertical_first_third"
             tools:text="Mostly cloudy throughout the day and breezy starting in the afternoon, continuing until evening."/>
 
     <TextView
@@ -65,7 +65,7 @@
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_icon"
             app:layout_constraintHorizontal_bias="0.45"
-            app:layout_constraintLeft_toLeftOf="@+id/horizontal_middle"
+            app:layout_constraintLeft_toLeftOf="@+id/vertical_first_third"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/forecast_icon"
             tools:text="19\u00b0"/>
