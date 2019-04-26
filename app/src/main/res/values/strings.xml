@@ -26,4 +26,7 @@
     <string name="celsius">Celsius</string>
     <string name="fahrenheit">Fahrenheit</string>
     <string name="uv_index">UV Index</string>
+    <string name="powered_by_darksky">
+        &lt;a href="http://darksky.net/poweredby/">Powered By DarkSky&lt;/a>
+    </string>
 </resources>

@@ -40,8 +40,22 @@
             android:id="@+id/activity_settings"
             android:name="com.example.sunshine.activities.settings.SettingsFragment"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/powered_by_darksky"
             android:layout_width="match_parent"
             android:layout_height="0dp">
     </fragment>
+    <TextView
+            android:id="@+id/powered_by_darksky"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textColorLink="@color/quantum_grey400"
+            android:textColor="@color/quantum_grey400"
+            android:text="@string/powered_by_darksky"
+            app:layout_constraintTop_toBottomOf="@id/activity_settings"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>
