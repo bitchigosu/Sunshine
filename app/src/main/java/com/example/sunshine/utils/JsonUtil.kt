@@ -68,8 +68,8 @@ class JsonUtil {
                 val icon = dayForecast.getString("icon")
                 val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(startDay + DAY_IN_MILLIS * i)
                 val sunTimeSDF = SimpleDateFormat("hh:mm", Locale.UK)
-                val sunriseTime = sunTimeSDF.format(startDay + sunrise)
-                val sunsetTime = sunTimeSDF.format(sunset)
+                val sunriseTime = sunTimeSDF.format(Date(sunrise * 1000))
+                val sunsetTime = sunTimeSDF.format(sunset * 1000)
 
                 if (SunshinePreferences.getPreferredWeatherUnits(context)) {
                     tempHigh = convertTemperature(tempHigh)
