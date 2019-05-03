@@ -10,7 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
-import com.example.sunshine.activities.forecast.MainActivity
+import com.example.sunshine.activities.forecast.ForecastActivity
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
 import com.google.android.gms.location.*
@@ -84,7 +84,7 @@ class WeatherRepository {
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                MainActivity.getWeakActivity().get() as Activity,
+                ForecastActivity.getWeakActivity().get() as Activity,
                 arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 34
             )
         }
@@ -94,7 +94,7 @@ class WeatherRepository {
             .setFastestInterval(1500000)
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        MainActivity.getWeakActivity().get()!!.runOnUiThread {
+        ForecastActivity.getWeakActivity().get()!!.runOnUiThread {
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
         }
         mFusedLocationProviderClient.lastLocation.addOnSuccessListener {

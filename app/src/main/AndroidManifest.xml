@@ -18,7 +18,7 @@
         <activity android:name=".activities.newlocation.NewLocation">
         </activity>
         <activity
-                android:name=".activities.forecast.MainActivity"
+                android:name=".activities.forecast.ForecastActivity"
                 android:launchMode="singleTop"
                 android:theme="@style/AppTheme.Forecast">
             <intent-filter>
@@ -34,10 +34,10 @@
         <activity
                 android:name=".activities.detail.DetailActivity"
                 android:label="Detailed Info"
-                android:parentActivityName=".activities.forecast.MainActivity">
+                android:parentActivityName=".activities.forecast.ForecastActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activities.forecast.MainActivity"/>
+                    android:value=".activities.forecast.ForecastActivity"/>
         </activity>
 
         <service
