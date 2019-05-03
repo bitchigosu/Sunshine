@@ -8,7 +8,7 @@
         <variable name="main"
                   type="com.example.sunshine.activities.forecast.ForecastActivity"/>
         <variable name="viewModel"
-                  type="com.example.sunshine.activities.forecast.data.WeatherViewModel"/>
+                  type="com.example.sunshine.activities.forecast.WeatherViewModel"/>
     </data>
 
 

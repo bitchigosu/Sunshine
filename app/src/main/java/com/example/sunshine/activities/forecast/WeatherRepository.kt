@@ -1,4 +1,4 @@
-package com.example.sunshine.activities.forecast.data
+package com.example.sunshine.activities.forecast
 
 import android.app.Activity
 import android.content.pm.PackageManager
@@ -10,7 +10,6 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
-import com.example.sunshine.activities.forecast.ForecastActivity
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
 import com.google.android.gms.location.*

@@ -35,7 +35,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         for (i in 0 until count) {
             val p: Preference = prefScreen.getPreference(i)
             if (p is androidx.preference.SwitchPreference) {
-                val switchPreference: androidx.preference.SwitchPreference = p
                 //switchPreference.widgetLayoutResource = R.layout.temperature_units_switch
             } else {
                 val value = sharedPreferences.getString(p.key, "")

@@ -1,7 +1,7 @@
 package com.example.sunshine
 
 import android.os.AsyncTask
-import com.example.sunshine.activities.forecast.data.WeatherRepository
+import com.example.sunshine.activities.forecast.WeatherRepository
 import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 

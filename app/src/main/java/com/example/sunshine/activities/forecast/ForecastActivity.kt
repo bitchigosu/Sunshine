@@ -1,19 +1,18 @@
 package com.example.sunshine.activities.forecast
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
-import com.example.sunshine.activities.forecast.data.WeatherViewModel
+import com.example.sunshine.activities.forecast.adapter.WeatherAdapter
 import com.example.sunshine.activities.settings.SettingsActivity
 import com.example.sunshine.databinding.ActivityForecastBinding
-
 import com.example.sunshine.utils.Pref
 import com.example.sunshine.utils.SunshineSyncUtils
 import kotlinx.android.synthetic.main.activity_forecast.*
@@ -27,12 +26,14 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         weakActivity = WeakReference(this)
+
         val binding: ActivityForecastBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_forecast)
         mViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(WeatherViewModel::class.java)
         mAdapter = WeatherAdapter { position ->
             onClickFun(position)
         }
+
         binding.viewModel = mViewModel
 
         recyclerView.adapter = mAdapter
