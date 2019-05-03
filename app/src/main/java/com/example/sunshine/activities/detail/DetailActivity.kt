@@ -1,19 +1,17 @@
 package com.example.sunshine.activities.detail
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.settings.SettingsActivity
 import com.example.sunshine.databinding.ActivityDetailBinding
 import com.example.sunshine.utils.JsonUtil
-import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.extra_weather_detail.*
 import kotlinx.android.synthetic.main.primary_weather_info.*
 
 
@@ -24,17 +22,21 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
-        position = intent.getIntExtra("WeatherPos", 0)
 
-        back_image.setOnClickListener {
-            finish()
-        }
-        settings_image.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
+        val binding: ActivityDetailBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_detail)
         mViewModel = ViewModelProviders.of(this, ViewModelFactory()).get(DetailViewModel::class.java)
+        binding.viewModel = mViewModel
+
+        mViewModel.goToBackScreen.observe(this, Observer {
+            finish()
+        })
+
+        mViewModel.goToSettingsScreen.observe(this, Observer {
+            navigateToSettings()
+        })
+
+        position = intent.getIntExtra("WeatherPos", 0)
         mViewModel.getWeatherById(position).observe(this, Observer {
             it?.let { data ->
                 with(this@DetailActivity) {
@@ -55,7 +57,7 @@ class DetailActivity : AppCompatActivity() {
                         sunriseValue.text = data.getSunrise()
                         sunsetValue.text = data.getSunset()
                         humidityValue.text = data.getHumidity().toString() + getString(R.string.percentage_symbol)
-                        pressureValue.text = data.getPressure().toString()
+                        pressureValue.text = data.getPressure().toInt().toString() + getString(R.string.hpa)
                         windValue.text = data.getWindSpeed().toString() + getString(R.string.kph)
                         uvIndexValue.text = data.getUvIndex().toString()
                     }
@@ -63,4 +65,11 @@ class DetailActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun navigateToSettings() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+    }
 }
+
+
