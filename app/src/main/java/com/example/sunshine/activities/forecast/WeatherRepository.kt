@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -23,6 +25,7 @@ class WeatherRepository {
     private lateinit var weather: ArrayList<WeatherEntry>
     private val mClient = OkHttpClient()
     private val mContext = SuperApplication.getContext()
+    private val handler = Handler(Looper.getMainLooper())
 
     private fun insert(weather: WeatherEntry) = InsertAsyncTask().execute(weather)!!
 
@@ -91,9 +94,8 @@ class WeatherRepository {
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(1800000)
             .setFastestInterval(1500000)
-
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        ForecastActivity.getWeakActivity().get()!!.runOnUiThread {
+        handler.post {
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
         }
         mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
