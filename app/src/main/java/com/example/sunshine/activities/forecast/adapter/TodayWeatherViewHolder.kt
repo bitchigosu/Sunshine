@@ -15,7 +15,7 @@ class TodayWeatherViewHolder(
         parent,
         false)) : ViewHolder(binding.root) {
 
-    override fun bind(item: WeatherEntry) {
-        binding.item = item
+    override fun bind(item : Any) {
+        binding.item = item as WeatherEntry
     }
 }

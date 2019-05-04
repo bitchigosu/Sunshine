@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
+import com.example.sunshine.activities.forecast.adapter.HourlyWeatherAdapter
 import com.example.sunshine.activities.forecast.adapter.WeatherAdapter
 import com.example.sunshine.activities.settings.SettingsActivity
 import com.example.sunshine.databinding.ActivityForecastBinding
@@ -22,6 +24,7 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     private lateinit var mViewModel: WeatherViewModel
     private lateinit var mAdapter: WeatherAdapter
+    private lateinit var mHourlyAdapter: HourlyWeatherAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +36,21 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         mAdapter = WeatherAdapter { position ->
             onClickFun(position)
         }
+        mHourlyAdapter = HourlyWeatherAdapter()
 
         binding.viewModel = mViewModel
 
         recyclerView.adapter = mAdapter
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
+
+        hourlyRecycler.adapter = mHourlyAdapter
+        hourlyRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        hourlyRecycler.setHasFixedSize(true)
+
+        mViewModel.getNewHourlyWeather().observe(this, Observer {
+            mHourlyAdapter.updateData(it)
+        })
 
         mViewModel.getNewWeather().observe(this, Observer {
             mAdapter.updateData(it!!)

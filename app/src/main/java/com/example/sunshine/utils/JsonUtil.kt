@@ -2,6 +2,7 @@ package com.example.sunshine.utils
 
 import android.content.Context
 import com.example.sunshine.R
+import com.example.sunshine.database.HourlyWeatherEntry
 import com.example.sunshine.database.WeatherEntry
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -53,6 +54,7 @@ class JsonUtil {
             val localDate = System.currentTimeMillis()
             val utcDate = getUTCDateFromLocal(localDate)
             val startDay = normalizeDate(utcDate)
+            val timeSDF = SimpleDateFormat("hh:mm", Locale.UK)
             for (i in 0 until data.length()) {
                 val dayForecast = data.getJSONObject(i)
                 val weatherDesc = dayForecast.getString("summary")
@@ -67,9 +69,8 @@ class JsonUtil {
                 humidity *= 100
                 val icon = dayForecast.getString("icon")
                 val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(startDay + DAY_IN_MILLIS * i)
-                val sunTimeSDF = SimpleDateFormat("hh:mm", Locale.UK)
-                val sunriseTime = sunTimeSDF.format(Date(sunrise * 1000))
-                val sunsetTime = sunTimeSDF.format(sunset * 1000)
+                val sunriseTime = timeSDF.format(sunrise * 1000)
+                val sunsetTime = timeSDF.format(sunset * 1000)
 
                 if (SunshinePreferences.getPreferredWeatherUnits(context)) {
                     tempHigh = convertTemperature(tempHigh)
@@ -79,12 +80,40 @@ class JsonUtil {
                     WeatherEntry(
                         id = i, city = cityName, date = date,
                         weatherDesc = weatherDesc, maxTemp = tempHigh, minTemp = tempLow,
-                        pressure = pressure, windSpeed = windSpeed, humidity = humidity.toInt(),sunrise = sunriseTime,
+                        pressure = pressure, windSpeed = windSpeed, humidity = humidity.toInt(), sunrise = sunriseTime,
                         sunset = sunsetTime, uvIndex = uvIndex, iconId = icon
                     )
                 )
             }
             return weatherData
+        }
+
+        @Throws(JSONException::class)
+        fun getHourlyWeatherFromJson(context: Context, hourlyJSON: String): ArrayList<HourlyWeatherEntry> {
+            val hourlyWeatherData = ArrayList<HourlyWeatherEntry>()
+            val forecastJson = JSONObject(hourlyJSON)
+            val hourly = forecastJson.getJSONObject("hourly")
+            val hourlyData = hourly.getJSONArray("data")
+            val timeSDF = SimpleDateFormat("HH", Locale.UK)
+            for (i in 0 until hourlyData.length() / 2) {
+                val hourForecast = hourlyData.getJSONObject(i)
+                var temperature = hourForecast.getDouble("temperature").toInt()
+                val timeInMillis = hourForecast.getDouble("time")
+                val time = timeSDF.format(timeInMillis * 1000)
+                val icon = hourForecast.getString("icon")
+
+                if (SunshinePreferences.getPreferredWeatherUnits(context)) {
+                    temperature = convertTemperature(temperature)
+                }
+
+                hourlyWeatherData.add(
+                    HourlyWeatherEntry(
+                        id = i, time = time, temperature = temperature,
+                        iconId = icon
+                    )
+                )
+            }
+            return hourlyWeatherData
         }
 
         @Throws(JSONException::class)

@@ -11,12 +11,17 @@ import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
 import com.example.sunshine.activities.detail.DetailActivity
 import com.example.sunshine.database.AppDatabase
+import com.example.sunshine.database.HourlyDatabase
 import okhttp3.*
 import java.io.IOException
 
 val db = AppDatabase.getInstance(SuperApplication.getContext())
 val mWeatherDao = db!!.weatherDao()
 var mAllWeather = mWeatherDao.getAllWeather()
+
+val hourlyDb = HourlyDatabase.getInstance(SuperApplication.getContext())
+val mHourlyDao = hourlyDb!!.hourlyWeatherDao()
+var mHourlyWeather = mHourlyDao.getHourlyWeather()
 
 fun notifications() {
     val context = SuperApplication.getContext()
@@ -59,6 +64,7 @@ fun OkHttpClient.makeNewCall(url: HttpUrl?, f: (jsonString: String) -> Unit) {
 
     })
 }
+
 private fun makeRequest(url: HttpUrl?): Request = Request.Builder()
     .url(url!!)
     .build()

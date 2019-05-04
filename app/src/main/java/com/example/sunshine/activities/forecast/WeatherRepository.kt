@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import com.example.sunshine.R
 import com.example.sunshine.SuperApplication
+import com.example.sunshine.database.HourlyWeatherEntry
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
 import com.google.android.gms.location.*
@@ -23,11 +24,14 @@ class WeatherRepository {
     private lateinit var mLocationRequest: LocationRequest
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var weather: ArrayList<WeatherEntry>
+    private lateinit var hourlyWeather: ArrayList<HourlyWeatherEntry>
     private val mClient = OkHttpClient()
     private val mContext = SuperApplication.getContext()
     private val handler = Handler(Looper.getMainLooper())
 
     private fun insert(weather: WeatherEntry) = InsertAsyncTask().execute(weather)!!
+    private fun insertHourly(weather: HourlyWeatherEntry) = InsertHourlyAsyncTask().execute(weather)!!
+
 
     @Synchronized
     fun getWeatherData(): LiveData<List<WeatherEntry>> {
@@ -50,6 +54,12 @@ class WeatherRepository {
         return mAllWeather
     }
 
+    @Synchronized
+    fun getHourlyWeatherData(): LiveData<List<HourlyWeatherEntry>> {
+        mHourlyWeather = mHourlyDao.getHourlyWeather()
+        return mHourlyWeather
+    }
+
     private fun getWeatherInfo(latitude: Double, longitude: Double) {
         val httpUrl = HttpUrl.parse(
             SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
@@ -57,8 +67,12 @@ class WeatherRepository {
         )
         mClient.makeNewCall(httpUrl) {
             weather = JsonUtil.getSimpleWeatherStringsFromJson(mContext, it)
+            hourlyWeather = JsonUtil.getHourlyWeatherFromJson(mContext, it)
             for (i in 0 until weather.size) {
                 insert(weather[i])
+            }
+            for (i in 0 until hourlyWeather.size) {
+                insertHourly(hourlyWeather[i])
             }
         }
     }
@@ -108,7 +122,6 @@ class WeatherRepository {
         }
     }
 
-
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult?) {
             val location = p0?.lastLocation
@@ -131,6 +144,13 @@ class WeatherRepository {
         private class InsertAsyncTask : AsyncTask<WeatherEntry, Unit, Unit>() {
             override fun doInBackground(vararg params: WeatherEntry?): Unit? {
                 mWeatherDao.insert(params[0]!!)
+                return null
+            }
+        }
+
+        private class InsertHourlyAsyncTask : AsyncTask<HourlyWeatherEntry, Unit, Unit>() {
+            override fun doInBackground(vararg params: HourlyWeatherEntry?): Unit? {
+                mHourlyDao.insert(params[0]!!)
                 return null
             }
         }

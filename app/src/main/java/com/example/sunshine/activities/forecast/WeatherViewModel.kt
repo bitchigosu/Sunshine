@@ -2,13 +2,14 @@ package com.example.sunshine.activities.forecast
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.sunshine.database.HourlyWeatherEntry
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.SingleLiveEvent
 
 class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() {
 
     val items : LiveData<List<WeatherEntry>> = repository.getWeatherData()
-
+    val itemsToday : LiveData<List<HourlyWeatherEntry>> = repository.getHourlyWeatherData()
     private val _goToSettingsScreen = SingleLiveEvent<Unit>()
     val goToSettingsScreen : LiveData<Unit> = _goToSettingsScreen
 
@@ -24,4 +25,5 @@ class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() 
     }
 
     fun getNewWeather() = repository.getWeatherData()
+    fun getNewHourlyWeather() = repository.getHourlyWeatherData()
 }
