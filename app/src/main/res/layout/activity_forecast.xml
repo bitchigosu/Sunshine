@@ -55,18 +55,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                <androidx.recyclerview.widget.RecyclerView
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:id="@+id/hourlyRecycler"
-                        android:clipToPadding="false"
-                        app:itemsToday="@{viewModel.itemsToday}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                </androidx.recyclerview.widget.RecyclerView>
+                <!--                <androidx.recyclerview.widget.RecyclerView
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        android:id="@+id/hourlyRecycler"
+                                        android:clipToPadding="false"
+                                        app:itemsToday="@{viewModel.itemsToday}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                </androidx.recyclerview.widget.RecyclerView>-->
 
                 <androidx.recyclerview.widget.RecyclerView
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/hourlyRecycler"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         android:id="@+id/recyclerView"
                         app:items="@{viewModel.items}"
                         android:clipToPadding="false"
@@ -78,7 +78,6 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

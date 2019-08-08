@@ -44,9 +44,9 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
 
-        hourlyRecycler.adapter = mHourlyAdapter
+/*        hourlyRecycler.adapter = mHourlyAdapter
         hourlyRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        hourlyRecycler.setHasFixedSize(true)
+        hourlyRecycler.setHasFixedSize(true)*/
 
         mViewModel.getNewHourlyWeather().observe(this, Observer {
             mHourlyAdapter.updateData(it)

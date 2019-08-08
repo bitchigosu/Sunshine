@@ -45,7 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         val activity: Activity = this.activity!!
-        val preference = findPreference(key)
+        val preference: Preference? = findPreference(key as CharSequence)
 
         if (preference != null) {
             if (key.equals(getString(R.string.pref_location_key))) {
