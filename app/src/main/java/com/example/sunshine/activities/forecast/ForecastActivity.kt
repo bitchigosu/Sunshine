@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sunshine.R
 import com.example.sunshine.ViewModelFactory
 import com.example.sunshine.activities.detail.DetailActivity
-import com.example.sunshine.activities.forecast.adapter.HourlyWeatherAdapter
 import com.example.sunshine.activities.forecast.adapter.WeatherAdapter
 import com.example.sunshine.activities.settings.SettingsActivity
 import com.example.sunshine.databinding.ActivityForecastBinding
@@ -20,7 +19,6 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     private lateinit var viewModel: WeatherViewModel
     private lateinit var weatherAdapter: WeatherAdapter
-    private lateinit var hourlyAdapter: HourlyWeatherAdapter
     private lateinit var binding: ActivityForecastBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +38,6 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         weatherAdapter = WeatherAdapter { position ->
             onClickFun(position)
         }
-        hourlyAdapter = HourlyWeatherAdapter()
         binding.recyclerView.adapter = weatherAdapter
         binding.recyclerView.setHasFixedSize(true)
 
@@ -62,9 +59,6 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     private fun subscribeToObservers() {
         viewModel = ViewModelProvider(this, ViewModelFactory()).get(WeatherViewModel::class.java)
-        viewModel.getNewHourlyWeather().observe(this) {
-            hourlyAdapter.updateData(it)
-        }
         viewModel.getNewWeather().observe(this) {
             weatherAdapter.updateData(it!!)
         }
@@ -77,9 +71,6 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         }
         viewModel.items.observe(this) {
             weatherAdapter.updateData(it)
-        }
-        viewModel.itemsToday.observe(this) {
-            hourlyAdapter.updateData(it)
         }
     }
 

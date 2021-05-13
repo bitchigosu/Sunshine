@@ -2,7 +2,6 @@ package com.example.sunshine.utils
 
 import android.content.Context
 import com.example.sunshine.R
-import com.example.sunshine.database.HourlyWeatherEntry
 import com.example.sunshine.database.WeatherEntry
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -24,7 +23,10 @@ class JsonUtil {
         private const val OWM_MESSAGE_CODE = "cod"
 
         @Throws(JSONException::class)
-        fun getSimpleWeatherStringsFromJson(context: Context, forecastJsonStr: String): ArrayList<WeatherEntry> {
+        fun getSimpleWeatherStringsFromJson(
+            context: Context,
+            forecastJsonStr: String
+        ): ArrayList<WeatherEntry> {
 
             /* Weather information. Each day's forecast info is an element of the "list" array */
 
@@ -68,7 +70,8 @@ class JsonUtil {
                 val sunset = dayForecast.getLong("sunsetTime")
                 humidity *= 100
                 val icon = dayForecast.getString("icon")
-                val date = SimpleDateFormat("EEE, MMM d", Locale.UK).format(startDay + DAY_IN_MILLIS * i)
+                val date =
+                    SimpleDateFormat("EEE, MMM d", Locale.UK).format(startDay + DAY_IN_MILLIS * i)
                 val sunriseTime = timeSDF.format(sunrise * 1000)
                 val sunsetTime = timeSDF.format(sunset * 1000)
 
@@ -78,42 +81,23 @@ class JsonUtil {
                 }
                 weatherData.add(
                     WeatherEntry(
-                        id = i, city = cityName, date = date,
-                        weatherDesc = weatherDesc, maxTemp = tempHigh, minTemp = tempLow,
-                        pressure = pressure, windSpeed = windSpeed, humidity = humidity.toInt(), sunrise = sunriseTime,
-                        sunset = sunsetTime, uvIndex = uvIndex, iconId = icon
-                    )
-                )
-            }
-            return weatherData
-        }
-
-        @Throws(JSONException::class)
-        fun getHourlyWeatherFromJson(context: Context, hourlyJSON: String): ArrayList<HourlyWeatherEntry> {
-            val hourlyWeatherData = ArrayList<HourlyWeatherEntry>()
-            val forecastJson = JSONObject(hourlyJSON)
-            val hourly = forecastJson.getJSONObject("hourly")
-            val hourlyData = hourly.getJSONArray("data")
-            val timeSDF = SimpleDateFormat("HH", Locale.UK)
-            for (i in 0 until hourlyData.length() / 2) {
-                val hourForecast = hourlyData.getJSONObject(i)
-                var temperature = hourForecast.getDouble("temperature").toInt()
-                val timeInMillis = hourForecast.getDouble("time")
-                val time = timeSDF.format(timeInMillis * 1000)
-                val icon = hourForecast.getString("icon")
-
-                if (SunshinePreferences.getPreferredWeatherUnits(context)) {
-                    temperature = convertTemperature(temperature)
-                }
-
-                hourlyWeatherData.add(
-                    HourlyWeatherEntry(
-                        id = i, time = time, temperature = temperature,
+                        id = i,
+                        city = cityName,
+                        date = date,
+                        weatherDesc = weatherDesc,
+                        maxTemp = tempHigh,
+                        minTemp = tempLow,
+                        pressure = pressure,
+                        windSpeed = windSpeed,
+                        humidity = humidity.toInt(),
+                        sunrise = sunriseTime,
+                        sunset = sunsetTime,
+                        uvIndex = uvIndex,
                         iconId = icon
                     )
                 )
             }
-            return hourlyWeatherData
+            return weatherData
         }
 
         @Throws(JSONException::class)
