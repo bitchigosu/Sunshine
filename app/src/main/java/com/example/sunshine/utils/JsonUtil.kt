@@ -121,6 +121,11 @@ class JsonUtil {
             val array = DoubleArray(2)
             val decode = JSONObject(geocodeJSON)
             val results = decode.getJSONArray("results")
+            if (results.isNull(0)) {
+                array[0] = 0.0
+                array[1] = 0.0
+                return array
+            }
             val n = results.getJSONObject(0)
             val geometry = n.getJSONObject("geometry")
             val lat = geometry.getDouble("lat")

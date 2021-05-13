@@ -29,11 +29,7 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         setContentView(binding.root)
         weakActivity = WeakReference(this)
 
-        weatherAdapter = WeatherAdapter { position ->
-            onClickFun(position)
-        }
-        hourlyAdapter = HourlyWeatherAdapter()
-
+        setupView()
         subscribeToObservers()
 
         Pref.registerListener(this)
@@ -41,6 +37,10 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     }
 
     private fun setupView() {
+        weatherAdapter = WeatherAdapter { position ->
+            onClickFun(position)
+        }
+        hourlyAdapter = HourlyWeatherAdapter()
         binding.recyclerView.adapter = weatherAdapter
         binding.recyclerView.setHasFixedSize(true)
 
@@ -51,6 +51,12 @@ class ForecastActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.getNewWeather()
             binding.swipeRefresh.isRefreshing = false
+        }
+        binding.settingsImage.setOnClickListener {
+            viewModel.onSettingsClicked()
+        }
+        binding.iconImage.setOnClickListener {
+            viewModel.onIconClicked()
         }
     }
 

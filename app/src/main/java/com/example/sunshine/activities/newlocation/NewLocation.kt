@@ -1,57 +1,45 @@
 package com.example.sunshine.activities.newlocation
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
-import com.example.sunshine.R
+import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.ViewModelProvider
 import com.example.sunshine.ViewModelFactory
+import com.example.sunshine.databinding.ActivityNewLocationBinding
 import com.example.sunshine.utils.Pref
 import com.example.sunshine.utils.SunshineSyncUtils
-import kotlinx.android.synthetic.main.activity_new_location.*
 
 class NewLocation : AppCompatActivity() {
 
-    private lateinit var mViewModel: NewLocationViewModel
+    private lateinit var viewModel: NewLocationViewModel
+    private lateinit var binding: ActivityNewLocationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_location)
+        binding = ActivityNewLocationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val adapter = AutoSuggestAdapter(this,android.R.layout.simple_dropdown_item_1line)
-        new_city_edit_text.threshold = 2
-        new_city_edit_text.setAdapter(adapter)
-        new_city_edit_text.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val text = new_city_edit_text.text.trim().toString()
-                mViewModel.searchCityByName(text)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-        })
-        new_city_edit_text.setOnItemClickListener { _, _, position, _ ->
+        val adapter = AutoSuggestAdapter(this, android.R.layout.simple_dropdown_item_1line)
+        binding.newCityEditText.threshold = 2
+        binding.newCityEditText.setAdapter(adapter)
+        binding.newCityEditText.doOnTextChanged { text, start, before, count ->
+            viewModel.searchCityByName(text?.trim().toString())
+        }
+        binding.newCityEditText.setOnItemClickListener { _, _, position, _ ->
             Pref.setString("City", adapter.getObject(position))
             SunshineSyncUtils.startImmediateSync(this)
             finish()
         }
 
-        back_image.setOnClickListener { finish() }
+        binding.backImage.setOnClickListener { finish() }
 
-        mViewModel = ViewModelProviders.of(this,ViewModelFactory())
+        viewModel = ViewModelProvider(this, ViewModelFactory())
             .get(NewLocationViewModel::class.java)
-        mViewModel.cities.observe(this, Observer {
-            it?.let{
+        viewModel.cities.observe(this) {
+            it?.let {
                 adapter.setData(it)
                 adapter.notifyDataSetChanged()
             }
-        })
+        }
     }
 }

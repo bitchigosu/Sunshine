@@ -6,18 +6,18 @@ import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 
 open class SunshineFirebaseJobService : JobService() {
-    private lateinit var mFetchWeatherTask: FetchWeatherTask
+    private lateinit var fetchWeatherTask: FetchWeatherTask
 
     override fun onStartJob(job: JobParameters): Boolean {
-        mFetchWeatherTask = FetchWeatherTask()
-        mFetchWeatherTask.execute()
+        fetchWeatherTask = FetchWeatherTask()
+        fetchWeatherTask.execute()
         jobFinished(job, false)
         return true
     }
 
     override fun onStopJob(job: JobParameters): Boolean {
-        if (!::mFetchWeatherTask.isInitialized) {
-            mFetchWeatherTask.cancel(true)
+        if (!::fetchWeatherTask.isInitialized) {
+            fetchWeatherTask.cancel(true)
         }
         return true
     }

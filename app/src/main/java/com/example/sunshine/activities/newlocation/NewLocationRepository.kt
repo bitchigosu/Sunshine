@@ -2,14 +2,14 @@ package com.example.sunshine.activities.newlocation
 
 import com.example.sunshine.utils.JsonUtil
 import com.example.sunshine.utils.makeNewCall
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 
 class NewLocationRepository {
 
-    fun getQueryResults(cityName: String, competition: (list: ArrayList<String>) -> Unit){
+    fun getQueryResults(cityName: String, competition: (list: ArrayList<String>) -> Unit) {
 
-        val httpUrl = HttpUrl.parse(SCHEME + GEOCODE_URL + cityName + GEOCODE_API_KEY)
+        val httpUrl = (SCHEME + GEOCODE_URL + cityName + GEOCODE_API_KEY).toHttpUrlOrNull()
         val client = OkHttpClient()
 
         client.makeNewCall(httpUrl) {

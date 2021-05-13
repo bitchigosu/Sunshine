@@ -21,12 +21,12 @@ import okhttp3.OkHttpClient
 
 class WeatherRepository {
 
-    private lateinit var mLocationRequest: LocationRequest
-    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var weather: ArrayList<WeatherEntry>
     private lateinit var hourlyWeather: ArrayList<HourlyWeatherEntry>
-    private val mClient = OkHttpClient()
-    private val mContext = SuperApplication.getContext()
+    private val okHttpClient = OkHttpClient()
+    private val appContext = SuperApplication.getContext()
     private val handler = Handler(Looper.getMainLooper())
 
     private fun insert(weather: WeatherEntry) = InsertAsyncTask().execute(weather)!!
@@ -36,8 +36,8 @@ class WeatherRepository {
 
     @Synchronized
     fun getWeatherData(): LiveData<List<WeatherEntry>> {
-        if (SunshinePreferences.getPreferredWeatherLocation(mContext)
-            == mContext.getString(R.string.current_location)
+        if (SunshinePreferences.getPreferredWeatherLocation(appContext)
+            == appContext.getString(R.string.current_location)
         ) {
             getLocation {
                 val latitude = it.latitude
@@ -65,9 +65,9 @@ class WeatherRepository {
         val httpUrl = (SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
                 + "$latitude, $longitude"
                 ).toHttpUrlOrNull()
-        mClient.makeNewCall(httpUrl) {
-            weather = JsonUtil.getSimpleWeatherStringsFromJson(mContext, it)
-            hourlyWeather = JsonUtil.getHourlyWeatherFromJson(mContext, it)
+        okHttpClient.makeNewCall(httpUrl) {
+            weather = JsonUtil.getSimpleWeatherStringsFromJson(appContext, it)
+            hourlyWeather = JsonUtil.getHourlyWeatherFromJson(appContext, it)
             for (i in 0 until weather.size) {
                 insert(weather[i])
             }
@@ -83,7 +83,7 @@ class WeatherRepository {
         val httpUrl =
             (SCHEME + GEOCODE_URL + newPlaceName + GEOCODE_API_KEY).toHttpUrlOrNull()
 
-        mClient.makeNewCall(httpUrl) {
+        okHttpClient.makeNewCall(httpUrl) {
             latlng = JsonUtil.getGeocodeFromJson(it)
             getWeatherInfo(
                 latitude = latlng[0],
@@ -107,19 +107,19 @@ class WeatherRepository {
                 arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION), 34
             )
         }
-        mLocationRequest = LocationRequest()
+        locationRequest = LocationRequest()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(1800000)
             .setFastestInterval(1500000)
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         handler.post {
-            mFusedLocationProviderClient.requestLocationUpdates(
-                mLocationRequest,
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest,
                 locationCallback,
                 null
             )
         }
-        mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
             if (it != null) {
                 completion(it)
             }
@@ -136,8 +136,6 @@ class WeatherRepository {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult?) {
             val location = p0?.lastLocation
-            if (location != null) {
-            }
         }
     }
 

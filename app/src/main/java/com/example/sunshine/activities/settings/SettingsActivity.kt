@@ -7,25 +7,27 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.text.util.Linkify
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sunshine.R
-import kotlinx.android.synthetic.main.activity_settings.*
+import com.example.sunshine.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-        back_image.setOnClickListener {
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.backImage.setOnClickListener {
             finish()
         }
-        powered_by_darksky.apply {
+        binding.poweredByDarksky.apply {
             movementMethod = LinkMovementMethod.getInstance()
             val darkskyUrl = "https://darksky.net/poweredby/"
             val message = SpannableString(getString(R.string.powered_by_darksky)).apply {
-                setLinkSpan("DarkSky",darkskyUrl)
+                setLinkSpan("DarkSky", darkskyUrl)
             }
             text = message
         }
@@ -36,7 +38,8 @@ class SettingsActivity : AppCompatActivity() {
         setSpan(
             object : ClickableSpan() {
                 override fun onClick(widget: View) {
-                    Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }.also { startActivity(it) }
+                    Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
+                        .also { startActivity(it) }
                 }
             },
             textIndex,

@@ -14,7 +14,8 @@ import com.example.sunshine.activities.newlocation.NewLocation
 import com.example.sunshine.utils.SunshinePreferences
 import com.example.sunshine.utils.SunshineSyncUtils
 
-class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
     private val TAG = "SettingsFragment"
     private val con = SuperApplication.getContext()
 
@@ -44,11 +45,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        val activity: Activity = this.activity!!
+        val activity: Activity = requireActivity()
         val preference: Preference? = findPreference(key as CharSequence)
 
         if (preference != null) {
-            if (key.equals(getString(R.string.pref_location_key))) {
+            if (key == getString(R.string.pref_location_key)) {
                 if (sharedPreferences!!.getString(preference.key, "") == "current_location") {
                     SunshineSyncUtils.startImmediateSync(activity)
                 } else if (sharedPreferences.getString(preference.key, "") == "other_location") {

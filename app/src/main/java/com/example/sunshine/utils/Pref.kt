@@ -11,10 +11,8 @@ class Pref {
 
         private fun initializePrefs() {
             if (!Companion::prefs.isInitialized) {
-                if (SuperApplication.getContext() != null) {
-                    prefs = PreferenceManager
-                        .getDefaultSharedPreferences(SuperApplication.getContext())
-                }
+                prefs = PreferenceManager
+                    .getDefaultSharedPreferences(SuperApplication.getContext())
             }
         }
 
@@ -61,16 +59,13 @@ class Pref {
         // strings
         fun getStringDefaultBlank(pref: String): String {
             initializePrefs()
-            return if (Companion::prefs.isInitialized) {
-                prefs.getString(pref, "")
-            } else ""
+            return prefs.getString(pref, "").orEmpty()
+
         }
 
         fun getString(pref: String, def: String): String {
             initializePrefs()
-            return if (Companion::prefs.isInitialized) {
-                prefs.getString(pref, def)
-            } else ""
+            return prefs.getString(pref, def).orEmpty()
         }
 
         fun setString(pref: String, str: String): Boolean {

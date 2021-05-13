@@ -54,7 +54,7 @@ fun notifications() {
 fun OkHttpClient.makeNewCall(url: HttpUrl?, f: (jsonString: String) -> Unit) {
     newCall(makeRequest(url)).enqueue(object : Callback {
         override fun onResponse(call: Call, response: Response) {
-            val jsonString = response.body()!!.string()
+            val jsonString = response.body?.string().orEmpty()
             f(jsonString)
         }
 
