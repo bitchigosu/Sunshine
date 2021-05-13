@@ -1,75 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tool="http://schemas.android.com/tools">
-    <data>
-        <variable name="item"
-                  type="com.example.sunshine.database.WeatherEntry"/>
-    </data>
+        xmlns:tool="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/touch_selector"
+        android:paddingBottom="@dimen/forecast_detail_vertical_padding"
+        android:paddingTop="@dimen/forecast_detail_vertical_padding"
+        android:paddingRight="@dimen/forecast_detail_horizontal_padding"
+        android:paddingLeft="@dimen/forecast_detail_horizontal_padding">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+            android:id="@+id/forecast_icon"
+            android:layout_width="@dimen/list_icon"
+            android:layout_height="@dimen/list_icon"
+            app:layout_constraintTop_toTopOf="@id/day_text"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/ic_snow" />
 
-            android:layout_width="match_parent"
+    <TextView
+            android:id="@+id/day_text"
+            tool:text="Day"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/touch_selector"
-            android:paddingBottom="@dimen/forecast_detail_vertical_padding"
-            android:paddingTop="@dimen/forecast_detail_vertical_padding"
-            android:paddingRight="@dimen/forecast_detail_horizontal_padding"
-            android:paddingLeft="@dimen/forecast_detail_horizontal_padding">
+            android:layout_marginStart="@dimen/list_item_date_start_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/forecast_icon" />
 
-        <ImageView
-                android:id="@+id/forecast_icon"
-                android:layout_width="@dimen/list_icon"
-                android:layout_height="@dimen/list_icon"
-                app:layout_constraintTop_toTopOf="@id/day_text"
-                app:layout_constraintStart_toStartOf="parent"
-                android:src="@drawable/ic_snow"/>
-        <TextView
-                android:id="@+id/day_text"
-                tool:text="Day"
-                android:text="@{item.date}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/list_item_date_start_margin"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/forecast_icon"/>
-        <TextView
-                android:id="@+id/weather_description_text"
-                tool:text="Mostly cloudy until evening and breezy in the afternoon."
-                android:text="@{item.weatherDesc}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/secondary_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@id/max_temp_text"
-                app:layout_constraintStart_toStartOf="@id/day_text"
-                app:layout_constraintTop_toBottomOf="@id/day_text"/>
-        <TextView
-                android:id="@+id/max_temp_text"
-                tool:text="18"
-                android:text="@{String.valueOf(item.maxTemp)}"
-                android:textColor="@color/primary_text"
-                android:textSize="@dimen/forecast_text_size"
-                android:fontFamily="sans-serif-light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/forecast_temperature_space"
-                app:layout_constraintEnd_toStartOf="@id/min_temp_text"
-                app:layout_constraintTop_toTopOf="@id/day_text"/>
-        <TextView
-                android:id="@+id/min_temp_text"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                tool:text="19"
-                android:text="@{String.valueOf(item.minTemp)}"
-                android:textSize="@dimen/forecast_text_size"
-                android:fontFamily="sans-serif-light"
-                android:gravity="end"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/day_text"/>
+    <TextView
+            android:id="@+id/weather_description_text"
+            tool:text="Mostly cloudy until evening and breezy in the afternoon."
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/secondary_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/max_temp_text"
+            app:layout_constraintStart_toStartOf="@id/day_text"
+            app:layout_constraintTop_toBottomOf="@id/day_text" />
+
+    <TextView
+            android:id="@+id/max_temp_text"
+            tool:text="18"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/forecast_text_size"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/forecast_temperature_space"
+            app:layout_constraintEnd_toStartOf="@id/min_temp_text"
+            app:layout_constraintTop_toTopOf="@id/day_text" />
+
+    <TextView
+            android:id="@+id/min_temp_text"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            tool:text="19"
+            android:textSize="@dimen/forecast_text_size"
+            android:fontFamily="sans-serif-light"
+            android:gravity="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/day_text" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

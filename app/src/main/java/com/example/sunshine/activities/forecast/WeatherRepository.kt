@@ -16,7 +16,7 @@ import com.example.sunshine.database.HourlyWeatherEntry
 import com.example.sunshine.database.WeatherEntry
 import com.example.sunshine.utils.*
 import com.google.android.gms.location.*
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 
 class WeatherRepository {
@@ -30,7 +30,8 @@ class WeatherRepository {
     private val handler = Handler(Looper.getMainLooper())
 
     private fun insert(weather: WeatherEntry) = InsertAsyncTask().execute(weather)!!
-    private fun insertHourly(weather: HourlyWeatherEntry) = InsertHourlyAsyncTask().execute(weather)!!
+    private fun insertHourly(weather: HourlyWeatherEntry) =
+        InsertHourlyAsyncTask().execute(weather)!!
 
 
     @Synchronized
@@ -61,10 +62,9 @@ class WeatherRepository {
     }
 
     private fun getWeatherInfo(latitude: Double, longitude: Double) {
-        val httpUrl = HttpUrl.parse(
-            SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
-                    + "$latitude, $longitude"
-        )
+        val httpUrl = (SCHEME + WEATHER_INFO_URL + WEATHER_INFO_API_KEY
+                + "$latitude, $longitude"
+                ).toHttpUrlOrNull()
         mClient.makeNewCall(httpUrl) {
             weather = JsonUtil.getSimpleWeatherStringsFromJson(mContext, it)
             hourlyWeather = JsonUtil.getHourlyWeatherFromJson(mContext, it)
@@ -81,7 +81,7 @@ class WeatherRepository {
         var latlng = DoubleArray(2)
         val newPlaceName = placeName.replace(" ", "+")
         val httpUrl =
-            HttpUrl.parse(SCHEME + GEOCODE_URL + newPlaceName + GEOCODE_API_KEY)
+            (SCHEME + GEOCODE_URL + newPlaceName + GEOCODE_API_KEY).toHttpUrlOrNull()
 
         mClient.makeNewCall(httpUrl) {
             latlng = JsonUtil.getGeocodeFromJson(it)
@@ -96,7 +96,10 @@ class WeatherRepository {
 
     private fun getLocation(completion: (Location) -> Unit) {
         val context = SuperApplication.getContext()
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            )
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
@@ -110,14 +113,22 @@ class WeatherRepository {
             .setFastestInterval(1500000)
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         handler.post {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, locationCallback, null)
+            mFusedLocationProviderClient.requestLocationUpdates(
+                mLocationRequest,
+                locationCallback,
+                null
+            )
         }
         mFusedLocationProviderClient.lastLocation.addOnSuccessListener {
             if (it != null) {
                 completion(it)
             }
         }.addOnFailureListener {
-            Toast.makeText(context, context.getString(R.string.cannot_get_current_coordinates), Toast.LENGTH_LONG)
+            Toast.makeText(
+                context,
+                context.getString(R.string.cannot_get_current_coordinates),
+                Toast.LENGTH_LONG
+            )
                 .show()
         }
     }
